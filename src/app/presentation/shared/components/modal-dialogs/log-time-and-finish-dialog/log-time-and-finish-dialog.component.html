@@ -1,0 +1,22 @@
+<div fxLayout="column">
+
+  <div>
+    <p class="mat-display-3 m-0 cap-c label-input">
+      Time (min)
+    </p>
+
+    <mat-form-field class="mat-input-custom" [floatLabel]="'never'">
+      <mat-icon matPrefix>watch_later</mat-icon>
+      <input type="number" [(ngModel)]="loggedTime" matInput>
+    </mat-form-field>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="end" class="mt-30">
+    <div>
+      <button mat-flat-button class="basic-button basic-main-secondary" disableRipple (click)="closeModal()">Cancel</button>
+    </div>
+    <div class="ml-20">
+      <button mat-flat-button class="basic-button basic-blue" disableRipple [disabled]="!loggedTime" (click)="sendLoggedTime()">Log Time & Finish</button>
+    </div>
+  </div>
+</div>

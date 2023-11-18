@@ -1,0 +1,161 @@
+@import "src/app/presentation/styles/_colors";
+
+.div-wrapper {
+  // margin: 25px;
+  // z-index: -;
+}
+
+section {
+  display: table;
+}
+
+.example-label {
+  display: table-cell;
+  font-size: 14px;
+  margin-left: 8px;
+  width: 200px;
+}
+
+.example-button-row {
+  display: table-cell;
+  width: 490px;
+  padding: 8px;
+  // text-align: center;
+}
+
+// .example-button-row .mat-button-base {
+//   margin: 8px 8px 8px 0;
+// }
+
+.example-flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.example-button-container {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+}
+
+.connect-icon {
+  transform: rotate(-43deg);
+  font-size: 20px;
+  margin-right: 4px;
+}
+
+.example-color-pie {
+  border: 1px solid black;
+  width: 80px;
+  height: 80px;
+  border-radius: 60px;
+}
+
+.example-color-pie-none {
+  background-color: white;
+  width: 80px;
+  height: 80px;
+  border-radius: 60px;
+}
+
+// Colors
+
+.basic-dark-static {
+  background-color: $basic-dark;
+}
+
+.basic-light-static {
+  background-color: $basic-light-static;
+}
+.basic-light-hover {
+  background-color: $basic-light-hover;
+}
+.basic-light-active {
+  background-color: $basic-light-active;
+}
+
+.main-primary-static {
+  background-color: $main-primary-static;
+}
+.main-primary-hover {
+  background-color: $main-primary-hover;
+}
+.main-primary-active {
+  background-color: $main-primary-active;
+}
+
+.main-secondary-static {
+  background-color: $main-secondary-static;
+}
+.main-secondary-hover {
+  background-color: $main-secondary-hover;
+}
+.main-secondary-active {
+  background-color: $main-secondary-active;
+}
+
+.main-teritary-static {
+  background-color: $main-teritary-static;
+}
+.main-teritary-hover {
+  background-color: $main-teritary-hover;
+}
+.main-teritary-active {
+  background-color: $main-teritary-active;
+}
+.main-teritary-disabled {
+  background-color: $main-teritary-disabled;
+}
+
+.accent-primary-static {
+  background-color: $accent-primary-static;
+}
+.accent-primary-hover {
+  background-color: $accent-primary-hover;
+}
+.accent-primary-active {
+  background-color: $accent-primary-active;
+}
+.accent-primary-disabled {
+  background-color: $accent-primary-disabled;
+}
+
+.accent-secondary-static {
+  background-color: $accent-secondary-static;
+}
+.accent-secondary-hover {
+  background-color: $accent-secondary-hover;
+}
+.accent-secondary-active {
+  background-color: $accent-secondary-active;
+}
+.accent-secondary-disabled {
+  background-color: $accent-secondary-disabled;
+}
+
+.accent-alert-static {
+  background-color: $accent-alert-static;
+}
+.accent-alert-hover {
+  background-color: $accent-alert-hover;
+}
+.accent-alert-active {
+  background-color: $accent-alert-active;
+}
+.accent-alert-disabled {
+  background-color: $accent-alert-disabled;
+}
+
+.accent-warning-static {
+  background-color: $accent-warning-static;
+}
+.accent-warning-hover {
+  background-color: $accent-warning-hover;
+}
+.accent-warning-active {
+  background-color: $accent-warning-active;
+}
+.accent-warning-disabled {
+  background-color: $accent-warning-disabled;
+}

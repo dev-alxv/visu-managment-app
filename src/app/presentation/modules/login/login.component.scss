@@ -1,0 +1,74 @@
+@import "src/app/presentation/styles/_colors";
+
+.login-wrapper {
+  position: relative;
+  margin-top: 20vh;
+  margin-left: auto;
+  margin-right: auto;
+  // height: 336px;
+  width: 500px;
+  border: 1px solid $main-secondary-static;
+  border-radius: 6px;
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+}
+
+.wrapper-header {
+  position: relative;
+  width: 100%;
+  display: flex;
+
+  height: 140px;
+  border-radius: 6px;
+  background-color: $accent-primary-static;
+}
+
+.logo {
+  width: 100%;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+
+.wrapper-logo {
+  width: 270px;
+  height: 65px;
+}
+
+.wrapper-icon {
+  font-size: 100px;
+  position: absolute;
+  top: 0%;
+  // left: 50%;
+  transform: translate(165%, 9%);
+}
+
+.hide-pass-button {
+  color: $accent-primary-static;
+  position: absolute;
+  right: 0;
+}
+
+.icon {
+  font-size: 200px;
+  color: white;
+}
+
+.wrapper-boddy {
+  margin-top: 32px;
+}
+
+.basic-input-icon-left {
+  width: 100% !important;
+}
+
+.wrapper-input-with-icon {
+  margin-bottom: 12px;
+}
+
+.wrapper-footer {
+  margin-top: 20px;
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+}

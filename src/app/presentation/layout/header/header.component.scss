@@ -1,0 +1,67 @@
+@import "src/app/presentation/styles/_colors";
+
+.header-wrapper {
+  background-color: $basic-light-static;
+  height: 44px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.authorized-user-info {
+  margin-right: 30px;
+  // color: $accent-primary-static;
+
+  .names {
+    font-weight: bold;
+  }
+
+  .email {
+    font-size: small;
+  }
+}
+
+.flag-name-small {
+  font-size: 8px;
+  color: $main-teritary-static;
+  text-align: left;
+}
+.flag-name-big {
+  font-size: 10px;
+}
+
+.control-header-icon {
+  margin-top: -4px;
+}
+
+.wrapper-flag {
+  margin-top: -5px;
+  margin-right: 5px;
+}
+
+.flag-preview {
+  margin-top: 8px;
+  font-size: 21px;
+}
+
+.settings-button {
+  border: 0px solid;
+  width: 20px;
+  height: 20px;
+  margin-right: 30px;
+  margin-top: 16px;
+  color: black;
+  &:hover {
+    color: $accent-warning-hover;
+    cursor: pointer;
+  }
+  &:focus {
+    color: $accent-warning-active;
+  }
+}
+
+.icon-settings {
+  background-color: white;
+  margin-top: -6px;
+  margin-left: -11px;
+  font-size: 26px;
+}

@@ -1,0 +1,70 @@
+<div class="wrapper">
+
+  <div class="spinner">
+    <scout24-container-spinner [transparentBackground]="true" [diameter]="'46'" [strokeWidth]="'6'" [loading]="loading" [noAnimation]="true">
+    </scout24-container-spinner>
+
+    <i class="material-icons-outlined" [style.visibility]="done ? 'visible' : 'hidden'">check_circle</i>
+  </div>
+
+  <div class="text-wrapper">
+    <h2 class="mat-h2" *ngIf="!uiStateReceived; else waitingDone" [ngSwitch]="type">
+
+      <span *ngSwitchCase="'CREATE_ORDER'">
+        Creating a new order ...
+      </span>
+
+      <span *ngSwitchCase="'EDIT_ORDER'">
+        Updating order ...
+      </span>
+
+      <span *ngSwitchCase="'DELETE_ORDER'">
+        Deleting order ...
+      </span>
+
+      <span *ngSwitchCase="'ADD_ORDER_FLOOR'">
+        Adding order floor/floors ...
+      </span>
+
+      <span *ngSwitchCase="'ASSIGN_USER_TO_ORDER'">
+        Assigning user ...
+      </span>
+
+      <span *ngSwitchCase="'LOG_ORDER_WORK_TIME_AND_FINISH'">
+        Finishing drawing ...
+      </span>
+
+    </h2>
+  </div>
+
+</div>
+
+<ng-template #waitingDone>
+  <h2 class="mat-h2" [ngSwitch]="type">
+
+    <span *ngSwitchCase="'CREATE_ORDER'">
+      Order has been successfully created
+    </span>
+
+    <span *ngSwitchCase="'EDIT_ORDER'">
+      Order has been successfully updated
+    </span>
+
+    <span *ngSwitchCase="'DELETE_ORDER'">
+      Order has been successfully deleted
+    </span>
+
+    <span *ngSwitchCase="'ADD_ORDER_FLOOR'">
+      Order floor/floors has been successfully added
+    </span>
+
+    <span *ngSwitchCase="'ASSIGN_USER_TO_ORDER'">
+      User has been successfully assigned
+    </span>
+
+    <span *ngSwitchCase="'LOG_ORDER_WORK_TIME_AND_FINISH'">
+      Order has been successfully finished
+    </span>
+
+  </h2>
+</ng-template>

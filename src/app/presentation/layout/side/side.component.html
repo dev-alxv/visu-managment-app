@@ -1,0 +1,64 @@
+<div class="side-wrapper">
+
+  <div class="background-layer-img">
+  </div>
+  <div class="background-layer">
+  </div>
+  <div class="logo-wrapper">
+    <img src="assets/img/Logo.png" alt="" class="logo-img">
+  </div>
+  <div class="devider">
+  </div>
+  <div class="nav-element-wrapper">
+    <div fxLayoutAlign="center" class="mt-10 mb-10">
+      <button mat-button routerLinkActive="nav-button-active" routerLink="/home" class="nav-button">
+        <i class="material-icons nav-icon">home</i>
+        Home
+      </button>
+    </div>
+    <div fxLayoutAlign="center" class="mt-10 mb-10">
+      <button mat-button routerLinkActive="nav-button-active" routerLink="/orders" class="nav-button">
+        <i class="material-icons nav-icon">view_list</i>
+        Orders
+      </button>
+    </div>
+    <div fxLayoutAlign="center" class="mt-10 mb-10" *ffCheckPermissions="['Admin', 'Supervisor']">
+      <button mat-button routerLinkActive="nav-button-active" routerLink="/new-order" class="nav-button">
+        <i class="material-icons nav-icon">library_add</i>
+        New Order/QS
+      </button>
+    </div>
+    <div class="nav-element-last mt-10 ">
+      <button mat-button routerLink="/support" class="nav-button-active">
+        <i class="material-icons nav-icon">contact_support</i>
+        Support
+      </button>
+
+      <div class="app_version__container font-size-xs">
+        <!-- <span>&nbsp;</span> -->
+        <!-- COPYRIGHT -->
+        <!-- <span>&#169;</span> -->
+        <small>
+          <span>FF Orders Web</span>
+          <span>&nbsp;</span>
+          <span>
+            <ng-container *ngIf="appVersion !== ''">
+              v{{ appVersion }}
+            </ng-container>
+            <!-- <ng-container *ngIf="appBuildNumber !== ''">
+            (Build {{ appBuildNumber }})
+          </ng-container> -->
+          </span>
+        </small>
+        <div>
+          <small>
+            <span>build</span>
+            <span>&nbsp;</span>
+            <span>4.4.22</span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

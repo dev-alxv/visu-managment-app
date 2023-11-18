@@ -1,0 +1,1375 @@
+<ng-container *ngIf="order; else loading">
+
+  <div class="order-wrapper">
+    <div class="order-left-side">
+      <!--
+    <div class="next-img-wrapper">
+      <img src="assets/img/next-custom.png" alt="" class="next-img-left">
+    </div> -->
+
+      <div class="left-side-wrapper">
+        <p class="mat-body-2 m-0 avatar-color">
+          Status:
+        </p>
+
+        <div class="order-status">
+          <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified dropdown-solo custom-mat-label dropdown-disabled">
+            <mat-label class="filter-font-color">
+              <i class="material-icons filter-icons">donut_large</i>
+              <div class="status-wrapper ml-10 {{ orderSelectedStatus.style }}">
+                <p class="mat-caption m-0 bold status-font">
+                  {{ orderSelectedStatus.name }}
+                </p>
+              </div>
+            </mat-label>
+
+            <mat-select [(ngModel)]="orderSelectedStatus" panelClass="select-panel-single-select" [disableOptionCentering]="true" [disabled]="true">
+              <mat-option *ngFor="let status of orderStatusListOption; index as i" [value]="status">
+                <div class="status-wrapper {{ status.style }}">
+                  <p class="mat-caption m-0 bold status-font">
+                    {{ status.name }}
+                  </p>
+                </div>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="avatar-wrapper">
+          <div class="avatar-outer-wrapper">
+            <p class="mat-body-2 m-0 avatar-color">
+              Assignee:
+            </p>
+            <div class="avatar-inner-wrapper">
+
+              <div class="avatar-img-wrapper">
+
+                <ng-container *ngIf="order.userData.assignee; else noAssignee">
+                  <img src="assets/img/avatar-placeholder.jpg" alt="" class="avatar-img">
+                </ng-container>
+
+                <ng-template #noAssignee>
+                  <img src="assets/img/pic-unassigned.svg" alt="" class="avatar-img">
+                </ng-template>
+              </div>
+
+              <div class="avatar-info-wrapper">
+
+                <ng-container *ngIf="order.userData.assignee; else noAssigneeName">
+                  <p class="mat-body-2 m-0 avatar-name-color">
+                    {{ order.userData.assignee && order.userData.assignee.names.first !== undefined ? order.userData.assignee.names.first + ' ' +
+                    order.userData.assignee.names.last : 'John Doe' }}
+                  </p>
+                  <p class="mat-display-3 m-0 cap-c">
+                    Supervisor
+                  </p>
+                </ng-container>
+
+                <ng-template #noAssigneeName>
+                  <p class="mat-body-2 m-0 avatar-name-color">
+                    Unassigned
+                  </p>
+                </ng-template>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- <div class="avatar-outer-wrapper">
+            <p class="mat-body-2 m-0 avatar-color">
+              Assignee:
+            </p>
+            <div class="avatar-inner-wrapper">
+              <div class="avatar-img-wrapper">
+                <img src="assets/img/pic-unassigned.svg" alt="" class="avatar-img">
+              </div>
+              <div class="avatar-info-empty-wrapper">
+                <p class="mat-body-2 m-0 avatar-name-empty-color">
+                  {{ order.userData.assignee ? order.userData.assignee.names.first : 'Unassigned' }}
+                </p>
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+        <!-- ROLE PERMISSION CHECK -->
+        <ng-container *ffCheckPermissions="['Supervisor']">
+
+          <p class="mat-body-2 m-0 avatar-color">
+            Priority:
+          </p>
+
+          <div class="order-status" style="position: relative;">
+            <mat-form-field floatLabel="never" appearance="fill" [ngClass]="{ 'dropdown-disabled' : orderChangePriorityIntentInProgress }"
+              class="dropdown-modified dropdown-solo priority-order-select custom-mat-label">
+              <mat-label class="filter-font-color">
+                <i class="material-icons filter-icons">priority_high</i>
+                <div class="status-wrapper ml-10 {{ orderSelectedPriority.style }}">
+                  <p class="mat-caption m-0 bold status-font">
+                    {{ orderSelectedPriority.name }}
+                  </p>
+                </div>
+              </mat-label>
+
+              <mat-select [(ngModel)]="orderSelectedPriority" panelClass="select-panel-single-select" [disableOptionCentering]="true"
+                (selectionChange)="setOrderPriority($event.value.name)" [disabled]="orderChangePriorityIntentInProgress">
+                <mat-option *ngFor="let priority of orderPriorityListOption; index as i" [value]="priority">
+                  <div class="status-wrapper {{priority.style}}">
+                    <p class="mat-caption m-0 bold status-font">
+                      {{ priority.name }}
+                    </p>
+                  </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <scout24-container-spinner [loading]="orderChangePriorityIntentInProgress" [diameter]="'26'" [strokeWidth]="'6'">
+            </scout24-container-spinner>
+          </div>
+
+          <div class="order-control-button">
+            <button mat-flat-button class="text-icon-button order-button basic-green" disableRipple
+              [disabled]="orderAssignIntentInProgress || order.status === 'IN_PROGRESS'" (click)="assign()">
+
+              <ng-container *ngIf="!orderAssignIntentInProgress; else assignInProgress">
+                <i class="material-icons custom-icon-button">person_add</i>
+                Assign...
+              </ng-container>
+
+              <ng-template #assignInProgress>
+                Assigning user ...
+                <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="true" [positionRight]="true" [diameter]="'26'" [strokeWidth]="'6'">
+                </scout24-container-spinner>
+              </ng-template>
+
+            </button>
+          </div>
+
+        </ng-container>
+        <!-- ///////////// -->
+
+        <!-- ROLE PERMISSION CHECK -->
+        <ng-container *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true">
+
+          <ng-container *ngIf="!isUserAssignedToOrder">
+
+            <div class="order-control-button">
+              <button mat-flat-button class="text-icon-button order-button basic-green" disableRipple
+                [disabled]="orderAssignIntentInProgress || !isUserAssignedToOrder" (click)="assign()">
+
+                <ng-container *ngIf="!orderAssignIntentInProgress; else assignInProgress">
+                  <i class="material-icons custom-icon-button">person_add</i>
+                  Assign to me
+                </ng-container>
+
+                <ng-template #assignInProgress>
+                  Assigning user ...
+                  <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="true" [positionRight]="true" [diameter]="'26'" [strokeWidth]="'6'">
+                  </scout24-container-spinner>
+                </ng-template>
+
+              </button>
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+        <!-- ROLE PERMISSION CHECK -->
+        <ng-container *ffCheckPermissions="['Drafter']; onlySelectedRoles: true">
+
+          <ng-container *ngIf="!isUserAssignedToOrder">
+
+            <div class="order-control-button">
+              <button mat-flat-button class="text-icon-button order-button basic-green" disableRipple
+                [disabled]="orderAssignIntentInProgress || !isUserAssignedToOrder" (click)="assign()">
+
+                <ng-container *ngIf="!orderAssignIntentInProgress; else assignInProgress">
+                  <i class="material-icons custom-icon-button">person_add</i>
+                  Assign to me
+                </ng-container>
+
+                <ng-template #assignInProgress>
+                  Assigning user ...
+                  <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="true" [positionRight]="true" [diameter]="'26'" [strokeWidth]="'6'">
+                  </scout24-container-spinner>
+                </ng-template>
+
+              </button>
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+        <div class="order-control-button">
+          <ng-container [ngSwitch]="order.status">
+
+            <ng-container *ngSwitchCase="'NEW'">
+              <button mat-flat-button class="basic-button basic-blue order-button" disableRipple (click)="invokeOrderAction('SET_READY')">
+                Set Ready
+              </button>
+            </ng-container>
+
+            <!--  -->
+            <!-- STATUS TO_DO -->
+            <!--  -->
+            <ng-container *ngSwitchCase="'TO_DO'">
+
+              <!-- ROLE PERMISSION CHECK -->
+              <ng-container *ffCheckPermissions="['Supervisor']">
+
+                <button mat-flat-button class="basic-button basic-blue order-button" disableRipple (click)="invokeOrderAction('START_DRAWING')">
+                  Start Drawing
+                </button>
+
+              </ng-container>
+
+              <!-- ROLE PERMISSION CHECK -->
+              <ng-container *ffCheckPermissions="['Drafter']; onlySelectedRoles: true">
+
+                <button mat-flat-button class="basic-button basic-blue order-button" disableRipple (click)="invokeOrderAction('START_DRAWING')"
+                  [disabled]="!isUserAssignedToOrder">
+                  Start Drawing
+                </button>
+
+              </ng-container>
+
+              <!-- ROLE PERMISSION CHECK -->
+              <ng-container *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true">
+
+                <button mat-flat-button class="basic-button basic-blue order-button" disableRipple (click)="invokeOrderAction('START_DRAWING')"
+                  [disabled]="!isUserAssignedToOrder">
+                  Start Drawing
+                </button>
+
+              </ng-container>
+            </ng-container>
+
+            <!--  -->
+            <!-- STATUS IN_PROGRESS -->
+            <!--  -->
+            <ng-container *ngSwitchCase="'IN_PROGRESS'">
+
+              <!-- ROLE PERMISSION CHECK -->
+              <ng-container *ffCheckPermissions="['Supervisor']">
+
+                <ng-container *ngIf="!isUserAssignedToOrder">
+
+                  <button mat-flat-button class="basic-button basic-red order-button" disableRipple (click)="emergencyUnassignConfirm()"
+                    [disabled]="orderEmergencyUnassignIntentInProgress">
+                    <span>Un-assign (Emergency)!</span>
+
+                    <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="orderEmergencyUnassignIntentInProgress" [positionRight]="true"
+                      [diameter]="'26'" [strokeWidth]="'6'">
+                    </scout24-container-spinner>
+                  </button>
+
+                </ng-container>
+
+              </ng-container>
+
+              <ng-container *ngIf="isUserAssignedToOrder">
+
+                <!-- invokeOrderAction('FINISH_DRAWING') -->
+                <button mat-flat-button class="basic-button basic-blue order-button" disableRipple (click)="openLogTimeAndFinish()">
+                  Finish Drawing & log time...
+                </button>
+
+                <button mat-flat-button class="basic-button basic-main-secondary order-button" disableRipple [disabled]="orderWorkTimeLogIntentInProgress"
+                  (click)="openLogTimeWithoutFinish()">
+                  <span>Log time w/o finish...</span>
+
+                  <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="orderWorkTimeLogIntentInProgress" [positionRight]="true"
+                    [diameter]="'26'" [strokeWidth]="'6'">
+                  </scout24-container-spinner>
+                </button>
+
+              </ng-container>
+
+            </ng-container>
+
+            <!--  -->
+            <!-- STATUS DONE -->
+            <!--  -->
+            <ng-container *ngSwitchCase="'DONE'">
+              <button mat-flat-button class="basic-button basic-blue order-button" disableRipple (click)="invokeOrderAction('START_DRAWING')">
+                Start Drawing
+              </button>
+
+              <button mat-flat-button class="basic-button basic-blue order-button" disableRipple (click)="invokeOrderAction('DELIVER')">
+                Send to External Provider
+              </button>
+            </ng-container>
+
+          </ng-container>
+        </div>
+
+        <div class="wrapper-order-actions" *ngIf="order.status !== 'IN_PROGRESS'">
+
+          <!-- <button mat-flat-button class="control-icon-button control-icon-grey" *ffCheckPermissions="['Admin', 'Supervisor']" disableRipple
+              (click)="addFloor()">
+              <i class="material-icons control-icon-buttom-span">library_add</i>
+            </button> -->
+
+          <button mat-flat-button class="control-icon-button control-icon-grey" *ffCheckPermissions="['Admin', 'Supervisor']" disableRipple (click)="addFloor()"
+            [disabled]="orderAddFloorIntentInProgress || !isUserAssignedToOrder && order.status === 'TO_DO'">
+
+            <i class="material-icons control-icon-buttom-span" [style.visibility]="orderAddFloorIntentInProgress ? 'hidden' : 'visible'">library_add</i>
+
+            <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="orderAddFloorIntentInProgress" [positionRight]="true" [diameter]="'26'"
+              [strokeWidth]="'6'">
+            </scout24-container-spinner>
+          </button>
+
+          <button mat-flat-button class="control-icon-button control-icon-grey" *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true"
+            disableRipple (click)="addFloor()" [disabled]="orderAddFloorIntentInProgress || !isUserAssignedToOrder">
+
+            <i class="material-icons control-icon-buttom-span" [style.visibility]="orderAddFloorIntentInProgress ? 'hidden' : 'visible'">library_add</i>
+
+            <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="orderAddFloorIntentInProgress" [positionRight]="true" [diameter]="'26'"
+              [strokeWidth]="'6'">
+            </scout24-container-spinner>
+          </button>
+
+
+          <button mat-flat-button class="control-icon-button control-icon-orange attach-file-action" *ffCheckPermissions="['Admin', 'Supervisor']" disableRipple
+            [disabled]="orderAddAttachmentIntentInProgress || !isUserAssignedToOrder && order.status === 'TO_DO'" (click)="openUploadDialog()">
+
+            <!-- <input type="file" name="fileUp" id="fileUp" #file (change)="sendAttachment(file.files)" [disabled]="orderAddAttachmentIntentInProgress" /> -->
+            <label for="fileUp" [style.visibility]="orderAddAttachmentIntentInProgress ? 'hidden' : 'visible'">
+              <i class="material-icons control-icon-buttom-span">attach_file</i>
+            </label>
+
+            <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="orderAddAttachmentIntentInProgress" [positionRight]="true" [diameter]="'26'"
+              [strokeWidth]="'6'">
+            </scout24-container-spinner>
+          </button>
+
+          <button mat-flat-button class="control-icon-button control-icon-orange attach-file-action"
+            *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true" disableRipple
+            [disabled]="orderAddAttachmentIntentInProgress || !isUserAssignedToOrder" (click)="openUploadDialog()">
+
+            <!-- <input type="file" name="fileUp" id="fileUp" #file (change)="sendAttachment(file.files)" [disabled]="orderAddAttachmentIntentInProgress" /> -->
+            <label for="fileUp" [style.visibility]="orderAddAttachmentIntentInProgress ? 'hidden' : 'visible'">
+              <i class="material-icons control-icon-buttom-span">attach_file</i>
+            </label>
+
+            <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="orderAddAttachmentIntentInProgress" [positionRight]="true" [diameter]="'26'"
+              [strokeWidth]="'6'">
+            </scout24-container-spinner>
+          </button>
+
+          <!-- <file-upload [control]="fileUploadControl">
+            <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+
+              <div class="file-upload--container">
+
+                <div class="upload-text">
+                  <ng-container *ngIf="isFileDragDropAvailable; else isNotDragDropAvailable">
+                    <button mat-flat-button class="control-icon-button control-icon-orange" *ffCheckPermissions="['Admin', 'Supervisor']" disableRipple>
+                      <input type="text" style="visibility: hidden;" type="file" id="myFile" name="filename">
+                      <i class="material-icons control-icon-buttom-span">attach_file</i>
+                    </button>
+                  </ng-container>
+                  <ng-template #isNotDragDropAvailable>
+                    <b>Click here</b> to<br> choose a files
+                  </ng-template>
+                </div>
+              </div>
+
+            </ng-template>
+          </file-upload> -->
+
+          <button mat-flat-button class="control-icon-button control-icon-blue" *ffCheckPermissions="['Admin', 'Supervisor']" disableRipple
+            [routerLink]="'./edit/'" [disabled]="!isUserAssignedToOrder && order.status === 'TO_DO'">
+            <i class="material-icons control-icon-buttom-span">edit</i>
+          </button>
+
+          <button mat-flat-button class="control-icon-button control-icon-green" disableRipple>
+            <i class="material-icons control-icon-buttom-span">file_copy</i>
+          </button>
+
+          <button mat-flat-button class="control-icon-button control-icon-red" *ffCheckPermissions="['Admin', 'Supervisor']" disableRipple
+            (click)="deleteOrderConfirm()" [disabled]="!isUserAssignedToOrder && order.status === 'TO_DO'">
+            <i class="material-icons control-icon-buttom-span">delete</i>
+          </button>
+        </div>
+
+        <div class="wrapper-order-actions" *ngIf="order.status === 'IN_PROGRESS'">
+
+          <button mat-flat-button class="control-icon-button control-icon-green" disableRipple>
+            <i class="material-icons control-icon-buttom-span">file_copy</i>
+          </button>
+
+        </div>
+
+        <p class="mat-body-2 m-0 avatar-color">
+          Order:
+        </p>
+
+        <div class="wrapper-order-info">
+
+          <div class="wrapper-info-element">
+            <div class="info-element-left">
+              <p class="mat-display-1 m-0 info-text-left">
+                Customer
+              </p>
+            </div>
+            <div class="info-element-right">
+              <p class="mat-display-1 m-0 info-text-right">
+                <!-- {{ order.userData.customer ? order.userData.customer.names.first + ' ' + order.userData.customer.names.last : '-' }} -->
+                {{ order.userData.customer ? order.userData.customer.names.first : '-' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="wrapper-info-element">
+            <div class="info-element-left">
+              <p class="mat-display-1 m-0 info-text-left">
+                Library
+              </p>
+            </div>
+            <div class="info-element-right">
+              <p class="mat-display-1 m-0 info-text-right">
+                {{ order.library ? order.library : '-' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="wrapper-info-element">
+            <div class="info-element-left">
+              <p class="mat-display-1 m-0 info-text-left">
+                Style
+              </p>
+            </div>
+            <div class="info-element-right">
+              <p class="mat-display-1 m-0 info-text-right">
+                {{ order.options.style ? order.options.style : '-' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="wrapper-info-element">
+            <div class="info-element-left">
+              <p class="mat-display-1 m-0 info-text-left">
+                Creation Date
+              </p>
+            </div>
+            <div class="info-element-right">
+              <p class="mat-display-1 m-0 info-text-right">
+                {{ order.orderDates.enquiry }}
+              </p>
+            </div>
+          </div>
+
+          <div class="wrapper-info-element">
+            <div class="info-element-left">
+              <p class="mat-display-1 m-0 info-text-left">
+                Deadline Date
+              </p>
+            </div>
+            <div class="info-element-right">
+              <p class="mat-display-1 m-0 info-text-right">
+                {{ order.orderDates.deadline }}
+              </p>
+            </div>
+          </div>
+
+          <div class="wrapper-info-element">
+            <div class="info-element-left">
+              <p class="mat-display-1 m-0 info-text-left">
+                Delivery
+              </p>
+            </div>
+            <div class="info-element-right">
+              <p class="mat-display-1 m-0 info-text-right">
+                {{ order.orderDates.delivery }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROLE PERMISSION CHECK -->
+        <ng-container *ffCheckPermissions="['Admin', 'Supervisor']">
+
+          <p class="mat-body-2 m-0 avatar-color">
+            Furnished Floorplan Information:
+          </p>
+
+          <div class="wrapper-ff-info">
+            <div class="wrapper-info-element" *ngFor="let option of orderOptions;">
+              <div class="info-element-left">
+                <p class="mat-display-1 m-0 info-text-left">
+                  {{ option.name}}
+                </p>
+              </div>
+              <div class="info-element-right">
+                <p class="mat-display-1 m-0 info-text-right">
+                  {{ option.info}}
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </ng-container>
+
+        <!-- ROLE PERMISSION CHECK -->
+        <ng-container *ffCheckPermissions="['Drafter']; onlySelectedRoles: true">
+
+          <ng-container *ngIf="onlyActiveOrderOptions.length > 0">
+
+            <p class="mat-body-2 m-0 avatar-color">
+              Furnished Floorplan Information:
+            </p>
+
+            <div class="wrapper-ff-info">
+              <div class="wrapper-info-element" *ngFor="let option of onlyActiveOrderOptions;">
+                <div class="info-element-left">
+                  <p class="mat-display-1 m-0 info-text-left">
+                    {{ option.name}}
+                  </p>
+                </div>
+                <div class="info-element-right">
+                  <p class="mat-display-1 m-0 info-text-right">
+                    {{ option.info}}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </ng-container>
+
+        </ng-container>
+
+        <!-- ROLE PERMISSION CHECK -->
+        <ng-container *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true">
+
+          <ng-container *ngIf="onlyActiveOrderOptions.length > 0">
+
+            <p class="mat-body-2 m-0 avatar-color">
+              Furnished Floorplan Information:
+            </p>
+
+            <div class="wrapper-ff-info">
+              <div class="wrapper-info-element" *ngFor="let option of onlyActiveOrderOptions;">
+                <div class="info-element-left">
+                  <p class="mat-display-1 m-0 info-text-left">
+                    {{ option.name}}
+                  </p>
+                </div>
+                <div class="info-element-right">
+                  <p class="mat-display-1 m-0 info-text-right">
+                    {{ option.info}}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </ng-container>
+
+        </ng-container>
+
+      </div>
+    </div>
+
+    <div class="order-right-side">
+      <div class="next-img-wrapper">
+        <img src="assets/img/next-custom.png" alt="" class="next-img-right">
+      </div>
+
+      <div class="order-header">
+        <h2 class="mat-h2 m-0 header-id">
+          ID - {{ order.ids.internal }}
+        </h2>
+
+        <p class="mat-body-1 m-0 header-customer">
+          Customer ID - {{ order.userData.customer ? order.userData.customer.id : '-' }}
+        </p>
+
+        <p class="mat-body-2 m-0">
+          Floors {{ order.floors ? order.floors.length : 0 }}
+        </p>
+      </div>
+
+
+      <div class="wrapper-floor-cards">
+        <ng-container *ngIf="order.floors && order.floors.length; else noOrderFloors">
+
+          <div class="floor-card" *ngFor="let floor of order.floors; trackBy: floorsTrackFn">
+
+            <div class="wrapper-card-preview">
+
+              <!-- WITH SOURCEFILE OR JSON -->
+              <ng-container *ngIf="floor.sourceFile || floor.projectFileJSON">
+
+                <!-- ROLE PERMISSION CHECK -->
+                <ng-container *ffCheckPermissions="['Admin', 'Supervisor']">
+
+                  <div class="wrapper-clear-icon" [style.visibility]="floor.projectFile ? 'visible' : 'hidden'">
+                    <button mat-flat-button class="control-icon-button-small control-icon-grey"
+                      (click)="deleteOrderFloorDataConfirm(floor.floorNumber, floor.id)" disableRipple>
+                      <i class="material-icons control-icon-buttom-span">close</i>
+                    </button>
+                  </div>
+
+                  <div class="wrapper-control-icons-two">
+                    <button [style.visibility]="floor.projectFile || floor.projectFileJSON ? 'visible' : 'hidden'" mat-button [matMenuTriggerFor]="menu"
+                      class="download-attachment" disableRipple>
+                      <button mat-flat-button class="control-icon-button-small control-icon-orange" disableRipple>
+                        <i class="material-icons control-icon-buttom-span">attach_file</i>
+                      </button>
+                    </button>
+                    <mat-menu #menu="matMenu" class="floor-menu-attachment" disableRipple>
+                      <a [disabled]="!floor.projectFile" mat-menu-item>Image</a>
+                      <a [disabled]="!floor.projectFile" mat-menu-item>Image with measurements</a>
+                      <a [disabled]="!floor.projectFile" mat-menu-item>Image with wall measurements</a>
+                      <a [disabled]="!floor.projectFileJSON" mat-menu-item [href]="floor.projectFileJSON ? floor.projectFileJSON.data.url : ''">JSON</a>
+                    </mat-menu>
+                    <button mat-flat-button class="control-icon-button-small control-icon-red" (click)="deleteOrderFloorConfirm(floor.id, floor.name)"
+                      disableRipple [disabled]="!isUserAssignedToOrder">
+                      <i class="material-icons control-icon-buttom-span">delete</i>
+                    </button>
+                  </div>
+
+                </ng-container>
+
+              </ng-container>
+
+              <!-- WITH SOURCEFILE -->
+              <ng-container *ngIf="floor.sourceFile">
+
+                <ng-container *ngIf="floor.sourceFile && !floor.projectFile; else projectFile">
+                  <div class="preview-picture-empty">
+                    <img [src]="floor.sourceFile.url" alt="" class="">
+                  </div>
+                </ng-container>
+
+                <ng-template #projectFile>
+                  <div class="preview-picture-empty">
+                    <img [src]="floor.projectFile.data.url" alt="" class="">
+                  </div>
+                </ng-template>
+
+              </ng-container>
+
+              <!-- NO SOURCEFILE -->
+              <ng-container *ngIf="!floor.sourceFile">
+
+                <div class="wrapper-control-icons-one">
+                  <button mat-flat-button class="control-icon-button-small control-icon-red" (click)="deleteOrderFloorConfirm(floor.id, floor.name)"
+                    disableRipple>
+                    <i class="material-icons control-icon-buttom-span">delete</i>
+                  </button>
+                </div>
+
+                <div class="preview-picture-empty">
+                  <img src="assets/img/icon-floor-empty.png" alt="" class="">
+                </div>
+              </ng-container>
+
+            </div>
+
+            <div class="wrapper-card-level">
+              <p class="mat-body-2 m-0">
+                {{floor.name}}
+              </p>
+            </div>
+
+            <div class="wrapper-card-attachment" *ngIf="floor.sourceFile">
+              <div class="attachment-left">
+                <i class="material-icons icons-card-attachment">attach_file</i>
+                <p class="mat-display-3 m-0 card-blue">
+                  <a [href]="floor.sourceFile.url">
+                    {{ floor.sourceFile.name }}
+                  </a>
+                </p>
+              </div>
+              <div class="attachment-right" *ngIf="false">
+                <i class="material-icons icons-card-attachment">close</i>
+              </div>
+            </div>
+
+            <div class="wrapper-card-attachment" *ngIf="floor.projectFile">
+              <div class="attachment-left">
+                <i class="material-icons icons-card-attachment">attach_file</i>
+                <p class="mat-display-3 m-0 card-blue">
+                  <a [href]="floor.projectFile.data.url">
+                    {{ floor.projectFile.data.name }}
+                  </a>
+                </p>
+              </div>
+              <div class="attachment-right" *ngIf="false">
+                <i class="material-icons icons-card-attachment">close</i>
+              </div>
+            </div>
+
+            <div class="wrapper-card-control">
+
+              <ng-container [ngSwitch]="order.status">
+
+                <ng-container *ngSwitchCase="'NEW'">
+
+                  <button mat-flat-button class="basic-button basic-main-secondary order-button card-control-button" disableRipple
+                    *ngIf="floor.sourceFile && !floor.projectFile" (click)="openExternalLink(floor.visuEditorLink)">Inspect / Prepare</button>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'TO_DO'">
+
+                  <!-- ROLE PERMISSION CHECK -->
+                  <ng-container *ffCheckPermissions="['Admin', 'Supervisor']">
+                    <button mat-flat-button class="basic-button basic-main-secondary order-button card-control-button" disableRipple
+                      *ngIf="floor.sourceFile && !floor.projectFile" (click)="openExternalLink(floor.visuEditorLink)"
+                      [disabled]="!isUserAssignedToOrder">Inspect / Prepare</button>
+                  </ng-container>
+
+                </ng-container>
+
+                <ng-container *ngSwitchDefault>
+
+                  <button mat-flat-button class="basic-button basic-main-secondary order-button card-control-button" disableRipple
+                    *ngIf="floor.sourceFile && !floor.projectFile" (click)="openExternalLink(floor.visuEditorLink)">
+
+                    <ng-container *ngIf="floor.projectFileJSON; else default">Redraw</ng-container>
+                    <ng-template #default>Start drawing</ng-template>
+
+                  </button>
+                </ng-container>
+
+              </ng-container>
+
+              <!-- <button mat-flat-button class="basic-button basic-main-secondary order-button card-control-button" disableRipple *ngIf="floor.projectFileJSON"
+                (click)="openExternalLink(floor.visuEditorLink)">Redraw</button> -->
+
+              <div class="card-two-buttons">
+
+                <!-- ROLE PERMISSION CHECK -->
+                <ng-container *ffCheckPermissions="['Admin', 'Supervisor']">
+
+                  <button mat-flat-button class="basic-button basic-blue order-button card-control-button attach-file-action" disableRipple
+                    [disabled]="!isUserAssignedToOrder && order.status === 'TO_DO'">
+                    <input type="file" name="{{ 'fileUp-' + floor.id }}" id="{{ 'fileUp-' + floor.id }}" #file
+                      (change)="sendFloorAttachment(file.files, floor.id, floor.floorNumber, 'source-file')" />
+                    <label for="{{ 'fileUp-' + floor.id }}">
+                      Upload File...
+                    </label>
+                  </button>
+
+                  <button mat-flat-button class="basic-button basic-blue order-button card-control-button attach-file-action" disableRipple
+                    [disabled]="!isUserAssignedToOrder && order.status === 'TO_DO'">
+                    <input type="file" name="{{ 'jsonUp-' + floor.id }}" id="{{ 'jsonUp-' + floor.id }}" #fileJson
+                      (change)="sendFloorAttachment(fileJson.files, floor.id, floor.floorNumber, 'json-file')" />
+                    <label for="{{ 'jsonUp-' + floor.id }}">
+                      Upload JSON...
+                    </label>
+                  </button>
+                </ng-container>
+
+                <!-- ROLE PERMISSION CHECK -->
+                <ng-container *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true">
+
+                  <ng-container *ngIf="isUserAssignedToOrder">
+
+                    <button mat-flat-button class="basic-button basic-blue order-button card-control-button attach-file-action" disableRipple>
+                      <input type="file" name="{{ 'fileUp-' + floor.id }}" id="{{ 'fileUp-' + floor.id }}" #file
+                        (change)="sendFloorAttachment(file.files, floor.id, floor.floorNumber, 'source-file')" />
+                      <label for="{{ 'fileUp-' + floor.id }}">
+                        Upload File...
+                      </label>
+                    </button>
+
+                    <button mat-flat-button class="basic-button basic-blue order-button card-control-button attach-file-action" disableRipple>
+                      <input type="file" name="{{ 'jsonUp-' + floor.id }}" id="{{ 'jsonUp-' + floor.id }}" #fileJson
+                        (change)="sendFloorAttachment(fileJson.files, floor.id, floor.floorNumber, 'json-file')" />
+                      <label for="{{ 'jsonUp-' + floor.id }}">
+                        Upload JSON...
+                      </label>
+                    </button>
+                  </ng-container>
+                </ng-container>
+
+              </div>
+            </div>
+
+            <!-- spinners -->
+            <scout24-container-spinner [loading]="orderUpdateFloorIntentInProgress && floorToUpdateId === floor.id" [message]="''"
+              [backgroundColor]="'rgba(255, 255, 255, 0.85)'" [messageColor]="'primary--color'" [borderRadius]="'6'">
+            </scout24-container-spinner>
+
+            <scout24-container-spinner [loading]="orderDeleteFloorIntentInProgress && floorToDeleteId === floor.id" [message]="'Deleting ...'"
+              [backgroundColor]="'rgba(255, 255, 255, 0.85)'" [messageColor]="'primary--color'" [borderRadius]="'6'">
+            </scout24-container-spinner>
+          </div>
+
+        </ng-container>
+
+        <ng-template #noOrderFloors>
+          <h2 class="mat-h2" style="margin-top: 45px;">No order floors found</h2>
+        </ng-template>
+      </div>
+
+      <!-- <div class="wrapper-floor-cards">
+
+        <div class="floor-card" *ngFor="let fake of fakeCards;">
+          <div class="wrapper-card-preview">
+
+            <div class="wrapper-clear-icon" *ngIf="fake.clear == 'yes'">
+              <button mat-flat-button class="control-icon-button-small control-icon-grey" disableRipple>
+                <i class="material-icons control-icon-buttom-span">close</i>
+              </button>
+            </div>
+
+            <div class="wrapper-control-icons-two" *ngIf="fake.attachment == 'yes'">
+              <button mat-button [matMenuTriggerFor]="menu" class="download-attachment" disableRipple>
+                <button mat-flat-button class="control-icon-button-small control-icon-orange" disableRipple>
+                  <i class="material-icons control-icon-buttom-span">attach_file</i>
+                </button>
+              </button>
+              <mat-menu #menu="matMenu" class="floor-menu-attachment" disableRipple>
+                <button mat-menu-item>Image</button>
+                <button mat-menu-item>Image with measurements</button>
+                <button mat-menu-item>Image with wall measurements</button>
+                <button mat-menu-item>JSON</button>
+              </mat-menu>
+              <button mat-flat-button class="control-icon-button-small control-icon-red" disableRipple>
+                <i class="material-icons control-icon-buttom-span">delete</i>
+              </button>
+            </div>
+
+
+            <div class="wrapper-control-icons-one" *ngIf="fake.attachment == 'no'">
+              <button mat-flat-button class="control-icon-button-small control-icon-red" disableRipple>
+                <i class="material-icons control-icon-buttom-span">delete</i>
+              </button>
+            </div>
+
+            <div *ngIf="fake.picture == 'yes'">
+              <img src="assets/img/fake-plan.png" alt="" class="">
+            </div>
+            <div class="preview-picture-empty" *ngIf="fake.picture == 'no'">
+              <img src="assets/img/icon-floor-empty.png" alt="" class="">
+            </div>
+
+          </div>
+          <div class="wrapper-card-level">
+            <p class="mat-body-2 m-0">
+              {{fake.floorlevel}}
+            </p>
+
+          </div>
+          <div class="wrapper-card-attachment" *ngIf="fake.attachment == 'yes'">
+            <div class="attachment-left">
+              <i class="material-icons icons-card-attachment">attach_file</i>
+              <p class="mat-display-3 m-0 card-blue">
+                {{fake.attachmentname}}
+              </p>
+            </div>
+            <div class="attachment-right">
+              <i class="material-icons icons-card-attachment">close</i>
+            </div>
+
+
+          </div>
+          <div class="wrapper-card-control">
+            <button mat-flat-button class="basic-button basic-main-secondary order-button card-control-button" disableRipple
+              *ngIf="fake.redraw == 'yes'">Redraw</button>
+            <button mat-flat-button class="basic-button basic-blue order-button card-control-button" disableRipple>Upload File...</button>
+
+          </div>
+        </div>
+
+      </div> -->
+
+      <div class="wrapper-attachment-and-history" fxLayout="row">
+
+        <!-- ROLE PERMISSION CHECK -->
+        <ng-container *ngIf="true">
+
+          <div class="wrapper-attachments">
+
+            <p class="mat-body-2 m-0">
+              Attachments
+            </p>
+
+            <div class="inner-wrapper-attachments">
+
+              <ng-container *ngIf="order.attachments && order.attachments.length; else noAttachments">
+
+                <p class="mat-display-1 m-0 attachments-type-title">
+                  Plans
+                </p>
+
+                <div class="attachment-item-wrapper" *ngFor="let attachment of order.attachments">
+
+                  <span class="attachment-item">
+                    <i class="material-icons icons-card-attachment">attach_file</i>
+                    <p class="mat-display-1 m-0 attachments-item-left">
+                      <a [href]="attachment.url">
+                        {{ attachment.name }}
+                      </a>
+                    </p>
+                    <p class="mat-display-1 m-0 attachments-item-right">
+                      Uploaded {{ attachment.dateCreated }}
+                    </p>
+                  </span>
+
+                  <!-- ROLE PERMISSION CHECK -->
+                  <ng-container *ffCheckPermissions="['Admin', 'Supervisor']">
+
+                    <button class="attachment-item-delete" (click)="deleteOrderAttachmentConfirm(attachment.id)"
+                      [hidden]="!isUserAssignedToOrder && order.status === 'TO_DO'">
+                      <i class="material-icons icons-card-attachment">close</i>
+                    </button>
+
+                  </ng-container>
+                  <!--  -->
+
+                  <!-- ROLE PERMISSION CHECK -->
+                  <ng-container *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true">
+
+                    <ng-container *ngIf="isUserAssignedToOrder">
+                      <button class="attachment-item-delete" (click)="deleteOrderAttachmentConfirm(attachment.id)">
+                        <i class="material-icons icons-card-attachment">close</i>
+                      </button>
+                    </ng-container>
+
+                  </ng-container>
+                  <!--  -->
+
+                  <div class="delete-confirm--wrapper" *ngIf="deleteAttachmentConfirmation && attachmentToDeleteId === attachment.id">
+                    <span>Remove this attachment?</span>
+                    <div class="actions">
+                      <a class="confirm" (click)="deleteAttachment(attachment.id, 'Data')">Remove</a>
+                      <a class="cancel" (click)="cancelDeleteOrderAttachment()">Cancel</a>
+                    </div>
+                  </div>
+
+                  <div class="loading--wrapper" *ngIf="orderDeleteAttachmentIntentInProgress && attachmentToDeleteId === attachment.id">
+                    <scout24-container-spinner [loading]="true" [message]="''" [backgroundColor]="'rgba(255, 255, 255, 0.85)'" [messageColor]="'primary--color'"
+                      [diameter]="'26'" [strokeWidth]="'6'">
+                    </scout24-container-spinner>
+                  </div>
+                </div>
+
+              </ng-container>
+
+              <ng-container *ngIf="order.options.logo">
+                <p class="mat-display-1 m-0 attachments-type-title">
+                  Logo
+                </p>
+
+                <div class="attachment-item-wrapper">
+
+                  <span class="attachment-item">
+                    <i class="material-icons icons-card-attachment">attach_file</i>
+                    <p class="mat-display-1 m-0 attachments-item-left">
+                      <a [href]="order.options.logo.externalLink">
+                        {{ order.options.logo.name }}
+                      </a>
+                    </p>
+                    <p class="mat-display-1 m-0 attachments-item-right">
+                      Uploaded {{ order.options.logo.dateCreated }}
+                    </p>
+                  </span>
+
+                  <!-- ROLE PERMISSION CHECK -->
+                  <ng-container *ffCheckPermissions="['Admin', 'Supervisor']">
+
+                    <button class="attachment-item-delete" (click)="deleteOrderAttachmentConfirm(order.options.logo.id)"
+                      [hidden]="!isUserAssignedToOrder && order.status === 'TO_DO'">
+                      <i class="material-icons icons-card-attachment">close</i>
+                    </button>
+
+                  </ng-container>
+                  <!--  -->
+
+                  <!-- ROLE PERMISSION CHECK -->
+                  <ng-container *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true">
+
+                    <ng-container *ngIf="isUserAssignedToOrder">
+                      <button class="attachment-item-delete" (click)="deleteOrderAttachmentConfirm(order.options.logo.id)">
+                        <i class="material-icons icons-card-attachment">close</i>
+                      </button>
+                    </ng-container>
+
+                  </ng-container>
+                  <!--  -->
+
+                  <div class="delete-confirm--wrapper" *ngIf="deleteAttachmentConfirmation && attachmentToDeleteId === order.options.logo.id">
+                    <span>Remove Logo?</span>
+                    <div class="actions">
+                      <a class="confirm" (click)="deleteAttachment(order.options.logo.id, 'Logo')">Remove</a>
+                      <a class="cancel" (click)="cancelDeleteOrderAttachment()">Cancel</a>
+                    </div>
+                  </div>
+
+                  <div class="loading--wrapper" *ngIf="orderDeleteAttachmentIntentInProgress && attachmentToDeleteId === order.options.logo.id">
+                    <scout24-container-spinner [loading]="true" [message]="''" [backgroundColor]="'rgba(255, 255, 255, 0.85)'" [messageColor]="'primary--color'"
+                      [diameter]="'26'" [strokeWidth]="'6'">
+                    </scout24-container-spinner>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="order.options.waterMark">
+                <p class="mat-display-1 m-0 attachments-type-title">
+                  Watermark
+                </p>
+
+                <div class="attachment-item-wrapper">
+
+                  <span class="attachment-item">
+                    <i class="material-icons icons-card-attachment">attach_file</i>
+                    <p class="mat-display-1 m-0 attachments-item-left">
+                      <a [href]="order.options.waterMark.externalLink">
+                        {{ order.options.waterMark.name }}
+                      </a>
+                    </p>
+                    <p class="mat-display-1 m-0 attachments-item-right">
+                      Uploaded {{ order.options.waterMark.dateCreated }}
+                    </p>
+                  </span>
+
+                  <!-- ROLE PERMISSION CHECK -->
+                  <ng-container *ffCheckPermissions="['Admin', 'Supervisor']">
+
+                    <button class="attachment-item-delete" (click)="deleteOrderAttachmentConfirm(order.options.waterMark.id)"
+                      [hidden]="!isUserAssignedToOrder && order.status === 'TO_DO'">
+                      <i class="material-icons icons-card-attachment">close</i>
+                    </button>
+
+                  </ng-container>
+                  <!--  -->
+
+                  <!-- ROLE PERMISSION CHECK -->
+                  <ng-container *ffCheckPermissions="['Drafter', 'Customer']; onlySelectedRoles: true">
+
+                    <ng-container *ngIf="isUserAssignedToOrder">
+                      <button class="attachment-item-delete" (click)="deleteOrderAttachmentConfirm(order.options.waterMark.id)">
+                        <i class="material-icons icons-card-attachment">close</i>
+                      </button>
+                    </ng-container>
+
+                  </ng-container>
+                  <!--  -->
+
+                  <div class="delete-confirm--wrapper" *ngIf="deleteAttachmentConfirmation && attachmentToDeleteId === order.options.waterMark.id">
+                    <span>Remove Watermark?</span>
+                    <div class="actions">
+                      <a class="confirm" (click)="deleteAttachment(order.options.waterMark.id, 'Watermark')">Remove</a>
+                      <a class="cancel" (click)="cancelDeleteOrderAttachment()">Cancel</a>
+                    </div>
+                  </div>
+
+                  <div class="loading--wrapper" *ngIf="orderDeleteAttachmentIntentInProgress && attachmentToDeleteId === order.options.waterMark.id">
+                    <scout24-container-spinner [loading]="true" [message]="''" [backgroundColor]="'rgba(255, 255, 255, 0.85)'" [messageColor]="'primary--color'"
+                      [diameter]="'26'" [strokeWidth]="'6'">
+                    </scout24-container-spinner>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-template #noAttachments>
+                <p class="">
+                  No order attachments found
+                </p>
+              </ng-template>
+
+            </div>
+          </div>
+
+        </ng-container>
+
+        <div class="wrapper-order-history" *ngIf="order.orderHistory.historyEvents.length">
+
+          <div class="order-history__container" *ngIf="false">
+
+            <div class="order-history__header" fxLayout="row" fxLayoutAlign="space-between">
+              <div class="mat-body-2 m-0 ">Order History</div>
+              <button (click)="toggleOrderHistoryView = !toggleOrderHistoryView">
+                <ng-container [ngSwitch]="toggleOrderHistoryView">
+                  <span *ngSwitchCase="true">
+                    Hide
+                  </span>
+                  <span *ngSwitchCase="false">
+                    See all
+                  </span>
+                </ng-container>
+              </button>
+            </div>
+
+            <div class="event-list__container">
+
+              <ng-container *ngIf="!toggleOrderHistoryView">
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">Order Created</div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 18:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">
+                    <div class="s-green status-wrapper">
+                      <p class="mat-caption m-0 bold status-font">NEW</p>
+                    </div>
+                  </div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 15:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">Comment was added</div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 12:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">
+                    <div class="badge-wrapper s-blue">
+                      <p class="mat-caption m-0 bold status-font">IN_PROGRESS</p>
+                    </div>
+                  </div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 18:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="toggleOrderHistoryView">
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">Order Created</div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 18:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">
+                    <div class="s-green status-wrapper">
+                      <p class="mat-caption m-0 bold status-font">NEW</p>
+                    </div>
+                  </div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 15:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">Comment was added</div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 12:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">
+                    <div class="badge-wrapper s-blue">
+                      <p class="mat-caption m-0 bold status-font">IN_PROGRESS</p>
+                    </div>
+                  </div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 18:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">Enquiry date</div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 18:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type"><span>Ivaylo Aleksiev</span> was assigned to order</div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 18:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">
+                    <div class="badge-wrapper s-yellow">
+                      <p class="mat-caption m-0 bold status-font">DONE</p>
+                    </div>
+                  </div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 18:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+                <div class="event__item" fxLayout="row">
+                  <div class="event__item-type">
+                    <div class="badge-wrapper s-purple">
+                      <p class="mat-caption m-0 bold status-font">CUSTOMER_REVIEW</p>
+                    </div>
+                  </div>
+                  <div class="event__item-date">&nbsp;- 22.03.22, 18:00</div>
+                  <div class="event__item-person">Ivaylo Aleksiev</div>
+                </div>
+              </ng-container>
+
+            </div>
+
+          </div>
+
+          <div class="order-history__container">
+
+            <div class="order-history__header" fxLayout="row" fxLayoutAlign="space-between">
+              <div class="mat-body-1 m-0 bold">Order History</div>
+
+              <button (click)="toggleOrderHistoryView = !toggleOrderHistoryView" *ngIf="order.orderHistory.historyEvents.length > 4">
+                <ng-container [ngSwitch]="toggleOrderHistoryView">
+                  <span *ngSwitchCase="true">
+                    Hide
+                  </span>
+                  <span *ngSwitchCase="false">
+                    See all
+                  </span>
+                </ng-container>
+              </button>
+            </div>
+
+            <div class="event-list__container">
+
+              <ng-container *ngFor="let event of order.orderHistory.historyEvents; index as i">
+
+                <ng-container *ngIf="i < 4">
+                  <div class="event__item" fxLayout="row" fxLayoutAlign="start center">
+
+                    <div class="event__item-row-icon">
+                      <div class="event__item-row-icon-line"></div>
+                    </div>
+                    <ng-container [ngTemplateOutlet]="this[event.type]" [ngTemplateOutletContext]="event"></ng-container>
+
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="i > 3 && toggleOrderHistoryView">
+                  <div class="event__item" fxLayout="row" fxLayoutAlign="start center">
+
+                    <div class="event__item-row-icon">
+                      <div class="event__item-row-icon-line"></div>
+                    </div>
+                    <ng-container [ngTemplateOutlet]="this[event.type]" [ngTemplateOutletContext]="event"></ng-container>
+
+                  </div>
+                </ng-container>
+
+              </ng-container>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+      <!--  -->
+
+      <div class="wrapper-comments">
+
+        <p class="mat-body-2 m-0">
+          Comments
+        </p>
+        <div class="inner-wrapper-attachments ">
+          <ng-container *ngIf="order && order.comments">
+            <ng-container *ngFor="let comment of order.comments">
+              <div class="card-comment">
+                <p class="mat-display-1 m-0 comment-note">
+                  {{ comment.content }}
+                </p>
+                <div class="wrapper-comment-signiture">
+                  <div class="comment-signiture">
+                    <div class="comment-signiture-left">
+                      <p class="mat-display-3 m-0 cap-c">
+                        {{ comment.creator ? comment.creator.names.first : 'Unknown' }}
+                      </p>
+                    </div>
+                    <div class="comment-signiture-right">
+                      <p class="mat-display-3 m-0 cap-c">
+                        {{ comment.date }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <div class="wrapper-comment-typing">
+          <mat-form-field class="comments-input-wrapper" appearance="fill" shouldLabelFloat="false">
+            <mat-label>Type some note here</mat-label>
+            <textarea id="orderCommentInput" name="orderCommentInput" #commentInput matInput rows="5" style="resize: none;" [(ngModel)]="orderCommentInput"
+              [disabled]="orderCommentIntentInProgress"></textarea>
+
+            <button mat-flat-button style="padding-top: 4px" class="basic-button basic-blue" disableRipple (click)="sendComment()"
+              [disabled]="commentInput.value === ''">
+              <ng-container *ngIf="!orderCommentIntentInProgress">Send</ng-container>
+              <ng-container *ngIf="orderCommentIntentInProgress">Sending ...</ng-container>
+              <scout24-container-spinner [backgroundColor]="'transparent'" [loading]="orderCommentIntentInProgress" [positionRight]="true" [diameter]="'26'"
+                [strokeWidth]="'6'">
+              </scout24-container-spinner>
+            </button>
+          </mat-form-field>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</ng-container>
+
+<ng-template #loading>
+  <div style="width: 100%; height: 100vh;">
+    <scout24-container-spinner [loading]="true"></scout24-container-spinner>
+  </div>
+</ng-template>
+
+<scout24-container-spinner [message]="" [loading]="orderActionIntentInProgress || orderUpdateIntentInProgress" [messageColor]="'primary--color'"
+  [backgroundColor]="'rgba(255, 255, 255, 0.7)'">
+</scout24-container-spinner>
+
+<!--  -->
+<!-- ORDER HISTORY EVENT TEMPLATES -->
+<!--  -->
+
+<ng-template #ORDER_CREATED let-date="date" let-user="user" let-creator="creator">
+  <div class="event__item-type">Order Created</div>
+  <div class="event__item-date">&nbsp;- {{ date }}</div>
+  <div class="event__item-person">{{ creator }}</div>
+</ng-template>
+
+<ng-template #COMMENT_ADDED let-date="date" let-user="user" let-creator="creator">
+  <div class="event__item-type">Comment was added</div>
+  <div class="event__item-date">&nbsp;- {{ date }}</div>
+  <div class="event__item-person">{{ creator }}</div>
+</ng-template>
+
+<ng-template #ORDER_STATUS_CHANGED let-date="date" let-user="user" let-creator="creator" let-type="orderStatusChangeValue">
+  <div class="event__item-type">
+    <div class="badge-wrapper " [ngClass]="{
+      's-green': type.newValue === 'NEW',
+      's-grey': type.newValue === 'TO_DO',
+      's-blue': type.newValue === 'IN_PROGRESS',
+      's-purple': type.newValue === 'CUSTOMER_REVIEW',
+      's-d-blue': type.newValue === 'FEEDBACK_REVIEW',
+      's-pink': type.newValue === 'APPROVED',
+      's-yellow': type.newValue === 'DONE'
+    }">
+      <p class="mat-caption m-0 bold status-font">{{ type.newValue }}</p>
+    </div>
+  </div>
+  <div class="event__item-date">&nbsp;- {{ date }}</div>
+  <div class="event__item-person">{{ creator }}</div>
+</ng-template>
+
+<ng-template #USER_ASSIGNED_TO_ORDER let-date="date" let-creator="creator" let-newUserData="orderStatusChangeValue">
+  <div class="event__item-type">
+    <span class="person">
+      <ng-container *ngIf="newUserData.newUserInfo.names && newUserData.newUserInfo.names.first; else noUserNames">
+        {{ newUserData.newUserInfo.names.first }} {{ newUserData.newUserInfo.names.last }}
+      </ng-container>
+      <ng-template #noUserNames>John Doe</ng-template>
+    </span>
+    was assigned to order
+  </div>
+  <div class="event__item-date">&nbsp;- {{ date }}</div>
+  <div class="event__item-person">{{ creator }}</div>
+</ng-template>
+
+<ng-template #LOG_TIME let-date="date" let-user="user" let-creator="creator" let-timeData="logTimeData">
+  <div class="event__item-type"><span class="person">{{ creator }}</span> finished (logged {{ timeData.time }} min)</div>
+  <div class="event__item-date">&nbsp;- {{ date }}</div>
+</ng-template>
+
+<ng-template #LOG_TIME_FINISH let-date="date" let-user="user" let-creator="creator" let-timeData="logTimeData">
+  <div class="event__item-type"><span class="person">{{ creator }}</span> finished order (logged {{ timeData.time }} min)</div>
+  <div class="event__item-date">&nbsp;- {{ date }}</div>
+</ng-template>
+
+<ng-template #EMERGENCY_ASSIGN let-date="date" let-user="user" let-creator="creator" let-timeData="logTimeData">
+  <div class="event__item-type"><span class="person">{{ creator }}</span> was Emergency assigned to order</div>
+  <div class="event__item-date">&nbsp;- {{ date }}</div>
+</ng-template>

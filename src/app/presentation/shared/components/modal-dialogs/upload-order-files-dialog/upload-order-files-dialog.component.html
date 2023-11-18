@@ -1,0 +1,179 @@
+<div class="wrapper" fxLayout="column">
+
+  <div class="attachments-wrapper mt-30 mb-40">
+    <h4 class="mat-h4 m-0">
+      Files / Data
+    </h4>
+
+    <div class="wrapper-attachment-info">
+
+      <file-upload [control]="fileUploadControl">
+        <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+          <div class="file-upload--container">
+            <div class="icon-wrap">
+              <i class="material-icons">upload_file</i>
+            </div>
+
+            <div class="upload-text">
+              <ng-container *ngIf="isFileDragDropAvailable; else isNotDragDropAvailable">
+                <b>Drag and drop</b> files<br> or click here
+              </ng-container>
+              <ng-template #isNotDragDropAvailable>
+                <b>Click here</b> to<br> choose a files
+              </ng-template>
+            </div>
+          </div>
+        </ng-template>
+      </file-upload>
+
+    </div>
+
+    <div class="inner-wrapper-attachments">
+
+      <div class="file-list" *ngIf="fileUploadControl.value.length > 0">
+        <div class="file-item" *ngFor="let file of fileUploadControl.value">
+
+          <div class="attachment-item-wrapper">
+            <span class="attachment-item">
+              <i class="material-icons icons-card-attachment">attach_file</i>
+              <p class="mat-display-1 m-0 attachments-item-left">
+                {{ file.name }}
+              </p>
+              <p class="mat-display-1 m-0 attachments-item-right">
+                Last modified {{ file.lastModified | date:'dd.MM.yyyy' }}
+              </p>
+            </span>
+            <button class="attachment-item-delete" (click)="fileUploadControl.removeFile(file)">
+              <i class="material-icons icons-card-attachment">close</i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="logo-wrapper mb-40">
+    <h4 class="mat-h4 m-0">
+      Logo
+    </h4>
+
+    <div class="wrapper-attachment-info">
+
+      <file-upload [control]="logoUploadControl">
+        <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+          <div class="file-upload--container">
+            <div class="icon-wrap">
+              <i class="material-icons">upload_file</i>
+            </div>
+
+            <div class="upload-text">
+              <ng-container *ngIf="isFileDragDropAvailable; else isNotDragDropAvailable">
+                <b>Drag and drop</b> only image files<br> or click here
+              </ng-container>
+              <ng-template #isNotDragDropAvailable>
+                <b>Click here</b> to<br> choose a files
+              </ng-template>
+            </div>
+          </div>
+        </ng-template>
+      </file-upload>
+
+    </div>
+
+    <div class="inner-wrapper-attachments">
+
+      <div class="file-list" *ngIf="logoUploadControl.value.length > 0">
+        <div class="file-item" *ngFor="let file of logoUploadControl.value">
+
+          <div class="attachment-item-wrapper">
+            <span class="attachment-item">
+              <i class="material-icons icons-card-attachment">attach_file</i>
+              <p class="mat-display-1 m-0 attachments-item-left">
+                {{ file.name }}
+              </p>
+              <p class="mat-display-1 m-0 attachments-item-right">
+                Last modified {{ file.lastModified | date:'dd.MM.yyyy' }}
+              </p>
+            </span>
+            <button class="attachment-item-delete" (click)="logoUploadControl.removeFile(file)">
+              <i class="material-icons icons-card-attachment">close</i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="watermark-wrapper">
+    <h4 class="mat-h4 m-0">
+      Watermark
+    </h4>
+
+    <div class="wrapper-attachment-info">
+
+      <file-upload [control]="watermarkUploadControl">
+        <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+          <div class="file-upload--container">
+            <div class="icon-wrap">
+              <i class="material-icons">upload_file</i>
+            </div>
+
+            <div class="upload-text">
+              <ng-container *ngIf="isFileDragDropAvailable; else isNotDragDropAvailable">
+                <b>Drag and drop</b> only image files<br> or click here
+              </ng-container>
+              <ng-template #isNotDragDropAvailable>
+                <b>Click here</b> to<br> choose a files
+              </ng-template>
+            </div>
+          </div>
+        </ng-template>
+      </file-upload>
+
+    </div>
+
+    <div class="inner-wrapper-attachments">
+
+      <div class="file-list" *ngIf="watermarkUploadControl.value.length > 0">
+        <div class="file-item" *ngFor="let file of watermarkUploadControl.value">
+
+          <div class="attachment-item-wrapper">
+            <span class="attachment-item">
+              <i class="material-icons icons-card-attachment">attach_file</i>
+              <p class="mat-display-1 m-0 attachments-item-left">
+                {{ file.name }}
+              </p>
+              <p class="mat-display-1 m-0 attachments-item-right">
+                Last modified {{ file.lastModified | date:'dd.MM.yyyy' }}
+              </p>
+            </span>
+            <button class="attachment-item-delete" (click)="watermarkUploadControl.removeFile(file)">
+              <i class="material-icons icons-card-attachment">close</i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" class="mt-30">
+    <div fxFlex="50" fxLayout="row">
+      <button mat-flat-button class="basic-button basic-main-secondary" disableRipple (click)="closeModal()">Cancel</button>
+    </div>
+    <div fxFlex="50" fxLayout="row-reverse">
+
+      <div class="ml-20">
+        <button mat-flat-button class="basic-button basic-blue" disableRipple (click)="confirmUpload()"
+          [disabled]="(fileUploadControl.value.length || logoUploadControl.value.length || watermarkUploadControl.value.length) === 0">Add</button>
+      </div>
+
+    </div>
+  </div>
+</div>

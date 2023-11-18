@@ -1,0 +1,54 @@
+<div class="fixActionRow">
+  <div fxLayout="row">
+    <div fxFlex="70" fxLayout="row">
+      <h4 mat-dialog-title class="mat-h2" *ngIf="modalInputData.modalTitle !== ''">
+        {{modalInputData.modalTitle}}
+      </h4>
+    </div>
+    <div fxFlex="30" fxLayout="row-reverse" *ngIf="modalInputData.buttonsConfig?.closeButton">
+      <button class="close-btn" mat-dialog-close><i class="material-icons">clear</i></button>
+      <span class="logo-wrapper" *ngIf="modalInputData.logo">
+        <p class="logo-text">
+          {{'scout24.Main.Modal.Logo' | translate}}
+        </p>
+        <img src="assets/img/immoviewer_logo-01.svg" alt="" class="logo">
+      </span>
+    </div>
+  </div>
+  <div class="spacer"></div>
+
+  <mat-dialog-content fxLayout="column" fxFlex="1 1 auto">
+    <ng-template #container></ng-template>
+  </mat-dialog-content>
+
+  <mat-dialog-actions *ngIf="modalInputData.controlActions">
+    <div fxLayout="row" fxFlex="100" class="mb-20">
+      <div fxFlex="50" fxLayout="row">
+
+        <button mat-flat-button class="basic-button basic-main-secondary" disableRipple (click)="closeModal()"
+          *ngIf="modalInputData.buttonsConfig?.cancelButton">Cancel</button>
+
+      </div>
+      <div fxFlex="50" fxLayout="row-reverse">
+
+        <div class="ml-20">
+          <button mat-flat-button class="basic-button basic-blue" disableRipple (click)="buttonTwoAction()"
+            *ngIf="modalInputData.buttonsConfig?.actionButtonTwo?.enable">
+            {{modalInputData.buttonsConfig?.actionButtonTwo.text}}
+          </button>
+        </div>
+
+        <button mat-raised-button class="raised-button-big-black " disableRipple (click)="buttonOneAction()"
+          *ngIf="modalInputData.buttonsConfig?.actionButtonOne?.enable">
+          {{modalInputData.buttonsConfig?.actionButtonOne.text}}
+        </button>
+
+        <button mat-raised-button class="raised-button-big-blue " disableRipple (click)="buttonThreeAction()"
+          *ngIf="modalInputData.buttonsConfig?.actionButtonThree?.enable">
+          {{modalInputData.buttonsConfig?.actionButtonThree.text}}
+        </button>
+
+      </div>
+    </div>
+  </mat-dialog-actions>
+</div>

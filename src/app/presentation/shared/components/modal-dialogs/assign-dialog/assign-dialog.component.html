@@ -1,0 +1,63 @@
+<div class="wrapper-assign">
+
+  <h3 class="mat-h3 m-0">
+    Assign to...
+  </h3>
+
+  <div class="wrapper-input-with-icon wrapper-assign-icon">
+    <i class="material-icons input-icon-left">account_circle</i>
+    <input #userInput placeholder="User" class="basic-input-icon-left assign-user-input" [(ngModel)]="assigneeInput"
+      (keyup)="onInputSearchEvent(userInput.value)" autofocus>
+  </div>
+
+  <div class="assign-user-box">
+
+    <ng-container *ngIf="assignUserOptionList.length; else loading">
+
+      <ng-container *ngIf="assignUserOptionList[0].name !== 'No Match'; else noUsers">
+
+        <div class="item-user" [ngClass]="{ 'selected': user.id === selectedAssignee.id }" *ngFor="let user of assignUserOptionList" (click)="selectUser(user)">
+          <div class="item-user-name">
+            <p class="mat-display-1 m-0">
+              {{ user.name }}
+            </p>
+          </div>
+          <div class="item-user-description">
+            <p class="mat-display-1 m-0">
+              {{ user.info }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+
+    </ng-container>
+
+  </div>
+
+</div>
+
+<div class="mt-30">
+  <div fxFlex="50" fxLayout="row">
+    <button mat-flat-button class="basic-button basic-main-secondary" disableRipple (click)="closeModal()">Cancel</button>
+  </div>
+  <div fxFlex="50" fxLayout="row-reverse">
+
+    <div class="ml-20">
+      <button mat-flat-button class="basic-button basic-blue" disableRipple (click)="assignTo()"
+        [disabled]="userInput.value === '' || userInput.value === undefined">Assign</button>
+    </div>
+
+  </div>
+</div>
+
+<ng-template #loading>
+  <div style="width: 100%; height: 100%;">
+    <scout24-container-spinner [loading]="true"></scout24-container-spinner>
+  </div>
+</ng-template>
+
+<ng-template #noUsers>
+  <div class="empty-user-list__message">
+    No match
+  </div>
+</ng-template>

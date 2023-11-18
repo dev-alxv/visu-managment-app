@@ -1,0 +1,136 @@
+@import "src/app/presentation/styles/_colors";
+
+.orders-filter {
+  // border: 1px solid black;
+  // height: 100%;
+  flex-wrap: wrap;
+  margin: 75px 20px 0px 20px;
+}
+
+.orders-table-wrapper {
+  // border: 1px solid black;
+  // height: 650px;
+  position: relative;
+}
+
+.orders-filter-control {
+  padding: 0px 20px 0px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  height: 50px;
+}
+
+.orders-pagination {
+  // margin: 0px 20px 0px 20px;
+  // border: 1px solid black;
+  height: 60px;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 24px;
+}
+
+.clear-button {
+  cursor: pointer;
+  margin-left: -1px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  height: 40px;
+  width: 32px;
+  color: $main-teritary-static;
+  border: 1px solid $main-secondary-static;
+  background-color: $main-primary-static;
+  &:hover {
+    border: 1px solid $main-secondary-static;
+    background-color: $main-primary-hover;
+  }
+  &:disabled {
+    background-color: $main-teritary-disabled;
+    cursor: default;
+  }
+  &:active {
+    background-color: $main-secondary-active;
+  }
+}
+
+.clear-button-icon {
+  font-size: 17px;
+  margin-top: 1px;
+  margin-left: -2px;
+}
+
+.filter-user {
+  margin-right: auto;
+}
+
+.filter-icons {
+  font-size: 17px;
+  margin-top: 1px;
+}
+
+@media screen and (max-width: 1325px) {
+  .filter-user {
+    margin-right: 30px;
+  }
+}
+
+.filter-font-color {
+  color: $main-teritary-static;
+  display: flex;
+}
+
+.orders-table {
+  width: 100%;
+
+  tr {
+    position: relative;
+  }
+}
+
+.table-td {
+  margin: 5px 0 5px 0;
+}
+
+.table-th {
+  color: black;
+}
+
+.table-assignee {
+  color: $accent-primary-static;
+  margin-left: 5px;
+}
+
+.table-td-assignee {
+  display: flex;
+  margin: 2.5px 0 2.5px 0;
+  flex-wrap: wrap;
+}
+
+.priority-badge {
+  display: block ruby;
+}
+
+.orders-table {
+  box-shadow: none;
+}
+
+.f-c-adjusting {
+  margin-top: 17px;
+  color: $main-teritary-static;
+}
+
+.orders-filter-control-left {
+  margin-top: 17px;
+  color: $main-teritary-static;
+}
+
+.wrapper-orders {
+  margin-top: 75px;
+}
+
+.no-orders-wrapper {
+  text-align: center;
+  padding: 100px 0;
+}
+
+.search_input__clear {
+  cursor: pointer;
+}

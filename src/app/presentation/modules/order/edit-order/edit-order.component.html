@@ -1,0 +1,588 @@
+<ng-container *ngIf="orderToEdit">
+  <div class="wrapper-new-order mt-50">
+    <h2 class="mat-h2 m-0">
+      Edit Order
+    </h2>
+
+    <div class="inner-wrapper-new-order">
+
+      <div class="wrapper-order-info">
+        <h4 class="mat-h4 m-0">
+          Order Info
+        </h4>
+
+        <div class="line-wrapper-first">
+          <div>
+            <p class="mat-display-3 m-0 cap-c label-input">
+              External ID
+            </p>
+            <input placeholder="e.g. FF12345" class="basic-input" [(ngModel)]="orderToEdit.ids.external" [disabled]="true">
+          </div>
+
+          <div class="right-element" style="position: relative;">
+            <p class="mat-display-3 m-0 cap-c label-input">
+              Customer
+            </p>
+            <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified">
+              <mat-select [(ngModel)]="selectedOrderCustomer" panelClass="select-panel-create-order" [disableOptionCentering]="true">
+                <mat-option *ngFor="let option of orderCustomerOptionList; index as i" [value]="option">
+                  <p class="mat-display-1 m-0">
+                    {{ option.name }}
+                  </p>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <ng-container *ngIf="!orderCustomerOptionList.length">
+              <scout24-container-spinner [loading]="true" [diameter]="'30'"></scout24-container-spinner>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="line-wrapper-dropdown">
+          <div>
+            <p class="mat-display-3 m-0 cap-c label-input">
+              Service Type
+            </p>
+            <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified">
+              <mat-select panelClass="select-panel-create-order" [disableOptionCentering]="true" [(ngModel)]="selectedOrderserviceType">
+                <mat-select-trigger>
+                  <div class="badge-wrapper {{ selectedOrderserviceType.color }}">
+                    <p class="mat-caption m-0 bold status-font">
+                      {{ selectedOrderserviceType.name }}
+                    </p>
+                  </div>
+                </mat-select-trigger>
+
+                <mat-option *ngFor="let option of serviceTypeOptionList; index as i" [value]="option">
+                  <div class="badge-wrapper {{ option.color }}">
+                    <p class="mat-caption m-0 bold status-font">
+                      {{ option.name }}
+                    </p>
+                  </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="right-element">
+            <p class="mat-display-3 m-0 cap-c label-input">
+              Priority
+            </p>
+            <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified">
+              <mat-select [(ngModel)]="selectedOrderPriority" panelClass="select-panel-create-order" [disableOptionCentering]="true">
+                <mat-select-trigger>
+                  <div class="badge-wrapper {{ selectedOrderPriority.color }}">
+                    <p class="mat-caption m-0 bold status-font">
+                      {{ selectedOrderPriority.name }}
+                    </p>
+                  </div>
+                </mat-select-trigger>
+                <mat-option *ngFor="let option of orderPriorityOptionList; index as i" [value]="option">
+                  <div class="badge-wrapper {{option.color}}">
+                    <p class="mat-caption m-0 bold status-font">
+                      {{ i + 1 }}. {{ option.name }}
+                    </p>
+                  </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="line-wrapper-dropdown">
+          <div>
+            <p class="mat-display-3 m-0 cap-c label-input">
+              Library
+            </p>
+            <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified">
+              <mat-select [(ngModel)]="selectedOrderLibrary" panelClass="select-panel-create-order" [disableOptionCentering]="true">
+                <mat-option *ngFor="let option of orderLibraryOptionList; index as i" [value]="option.id">
+                  <p class="mat-display-1 m-0">
+                    {{ option.name }}
+                  </p>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="right-element">
+            <p class="mat-display-3 m-0 cap-c label-input">
+              Style
+            </p>
+            <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified">
+              <mat-select [(ngModel)]="selectedOrderStyle" panelClass="select-panel-create-order" [disableOptionCentering]="true">
+                <mat-option *ngFor="let option of orderStyleOptionList; index as i" [value]="option.id">
+                  <p class="mat-display-1 m-0">
+                    {{ option.name }}
+                  </p>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="line-wrapper-bottom">
+
+          <!-- <div style="position: relative;">
+            <p class="mat-display-3 m-0 cap-c label-input">
+              Supervisor
+            </p>
+            <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified">
+
+              <mat-select [(ngModel)]="selectedOrderSupervisor" panelClass="select-panel-create-order" [disableOptionCentering]="true">
+                <mat-option *ngFor="let option of orderSupervisorOptionList; index as i" [value]="option">
+                  <p class="mat-display-1 m-0">
+                    {{ option.name }}
+                  </p>
+                </mat-option>
+              </mat-select>
+
+            </mat-form-field>
+
+            <ng-container *ngIf="!orderSupervisorOptionList.length">
+              <scout24-container-spinner [loading]="true" [diameter]="'30'"></scout24-container-spinner>
+            </ng-container>
+          </div> -->
+
+          <div class="right-element-date">
+            <div>
+              <p class="mat-display-3 m-0 cap-c label-input">
+                Deadline Date
+              </p>
+              <mat-form-field appearance="fill" class="dropdown-modified-date">
+                <!-- <mat-label>Choose a date</mat-label> -->
+                <input matInput [matDatepicker]="picker" [value]="initialDeadlineDate" [min]="todayDate" (dateChange)="selectDateEvent($event)" readonly />
+                <mat-datepicker-toggle matSuffix [disableRipple]="true" [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div>
+              <p class="mat-display-3 m-0 cap-c label-input">
+                Deadline Time
+              </p>
+              <mat-form-field class="dropdown-modified-time" [floatLabel]="'never'">
+                <input [(ngModel)]="selectedOrderDeadlineTime" id="selectedTimeInput" matInput name="selected_time_A" [ngxMatTimepicker]="pickerA" [format]="24"
+                  [min]="minSelectableHour" [disabled]="currentHour === '23' || orderDateInFuture === false" readonly />
+                <mat-icon matSuffix (click)="currentHour !== '23' && orderDateInFuture === true ? pickerA.open() : null">
+                  watch_later
+                </mat-icon>
+              </mat-form-field>
+              <ngx-mat-timepicker #pickerA></ngx-mat-timepicker>
+            </div>
+          </div>
+        </div>
+
+        <div class="wrapper-order-floors-attachments">
+
+          <div class="wrapper-order-structure">
+            <div class="header-add-floor">
+              <div class="header-add-floor-left">
+                <h4 class="mat-h4 m-0">
+                  Floors
+                </h4>
+              </div>
+              <div class="header-add-floor-right">
+                <button class="attachment-item-delete" (click)="addNewFloor()">
+                  <p class="mat-display-1 m-0">
+                    + Add Floor
+                  </p>
+                </button>
+              </div>
+            </div>
+
+            <ng-container *ngFor="let orderFloor of orderFloorList; index as i">
+              <div class="wrapper-floor-info">
+
+                <div class="wrapper-left-floor-info">
+                  <div class="wrapper-floor-element">
+                    <span class="number-floor-element">
+                      <p class="mat-body-2 m-0">
+                        {{ i + 1 }}
+                      </p>
+                    </span>
+                    <div>
+                      <p class="mat-display-3 m-0 cap-c label-input">
+                        Number
+                      </p>
+                      <input placeholder="-1" [(ngModel)]="orderFloor.number" type="number" class="basic-input basic-input-floor-element">
+                    </div>
+                  </div>
+                </div>
+                <div class="wrapper-right-floor-info">
+                  <div class="wrapper-floor-element">
+                    <div>
+                      <p class="mat-display-3 m-0 cap-c label-input">
+                        Name
+                      </p>
+                      <input placeholder="Basement" [(ngModel)]="orderFloor.name" class="basic-input basic-input-floor-element">
+                    </div>
+                    <span class="delete-floor-element">
+                      <button mat-flat-button class="control-icon-button-small control-icon-red" (click)="deleteNewFloor(i)" disableRipple>
+                        <i class="material-icons control-icon-buttom-span">delete</i>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+
+        </div>
+
+        <div class="wrapper-order-structure">
+
+          <h4 class="mat-h4 m-0">
+            Attachments
+          </h4>
+
+          <div class="wrapper-attachment-info">
+
+            <file-upload [control]="fileUploadControl">
+              <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+                <div class="file-upload--container">
+                  <div class="icon-wrap">
+                    <i class="material-icons">upload_file</i>
+                  </div>
+
+                  <div class="upload-text">
+                    <ng-container *ngIf="isFileDragDropAvailable; else isNotDragDropAvailable">
+                      <b>Drag and drop</b> files<br> or click here
+                    </ng-container>
+                    <ng-template #isNotDragDropAvailable>
+                      <b>Click here</b> to<br> choose a files
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-template>
+            </file-upload>
+
+          </div>
+
+          <div class="inner-wrapper-attachments">
+
+            <ng-container *ngFor="let attachment of attachments; index as i">
+              <div class="attachment-item-wrapper">
+                <span class="attachment-item">
+                  <i class="material-icons icons-card-attachment">attach_file</i>
+                  <p class="mat-display-1 m-0 attachments-item-left">
+                    {{ attachment.name }}
+                  </p>
+                  <p class="mat-display-1 m-0 attachments-item-right">
+                    Uploaded {{ attachment.dateCreated }}
+                  </p>
+                </span>
+                <button class="attachment-item-delete" (click)="deleteAttachment(i)">
+                  <i class="material-icons icons-card-attachment">close</i>
+                </button>
+              </div>
+            </ng-container>
+
+            <div class="file-list" *ngIf="fileUploadControl.value.length > 0">
+              <div class="file-item" *ngFor="let file of fileUploadControl.value">
+
+                <div class="attachment-item-wrapper">
+                  <span class="attachment-item">
+                    <i class="material-icons icons-card-attachment">attach_file</i>
+                    <p class="mat-display-1 m-0 attachments-item-left">
+                      {{ file.name }}
+                    </p>
+                    <p class="mat-display-1 m-0 attachments-item-right">
+                      Last modified {{ file.lastModified | date:'dd.MM.yyyy' }}
+                    </p>
+                  </span>
+                  <button class="attachment-item-delete" (click)="fileUploadControl.removeFile(file)">
+                    <i class="material-icons icons-card-attachment">close</i>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="wrapper-order-ff">
+        <div class="wrapper-order-info">
+          <h4 class="mat-h4 m-0">
+            Order Info
+          </h4>
+
+          <div class="wrapper-ff-info">
+
+            <div class="wrapper-left-ff-info">
+              <div class="wrapper-info-element" *ngFor="let info of ffInfos;">
+                <div class="info-element-left">
+                  <p class="mat-display-1 m-0 info-text-left">
+                    {{ info.name}}
+                  </p>
+                </div>
+                <div class="info-element-right">
+                  <p class="mat-display-1 m-0 info-text-right">
+                    <mat-radio-group aria-label="Select an option" (change)="setOrderOptions($event.value, info.name)">
+                      <mat-radio-button value="true" class="radio-left" [checked]="info.selected">Yes</mat-radio-button>
+                      <mat-radio-button value="false" [checked]="!info.selected">No</mat-radio-button>
+                    </mat-radio-group>
+                  </p>
+                </div>
+              </div>
+
+              <div class="wrapper-info-element">
+                <div class="info-element-left">
+                  <p class="mat-display-1 m-0 info-text-left">
+                    Logo
+                  </p>
+                </div>
+                <div class="info-element-right">
+                  <p class="mat-display-1 m-0 info-text-right">
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="addOrderLogo">
+                      <mat-radio-button [value]="true" class="radio-left">Yes</mat-radio-button>
+                      <mat-radio-button [value]="false" [checked]="true">No</mat-radio-button>
+                    </mat-radio-group>
+                  </p>
+                </div>
+              </div>
+
+              <div class="wrapper-info-element">
+                <div class="info-element-left">
+                  <p class="mat-display-1 m-0 info-text-left">
+                    Watermark
+                  </p>
+                </div>
+                <div class="info-element-right">
+                  <p class="mat-display-1 m-0 info-text-right">
+                    <mat-radio-group aria-label="Select an option" [(ngModel)]="addOrderWatermark">
+                      <mat-radio-button [value]="true" class="radio-left">Yes</mat-radio-button>
+                      <mat-radio-button [value]="false" [checked]="true">No</mat-radio-button>
+                    </mat-radio-group>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="wrapper-right-ff-info">
+              <div class="line-wrapper-dropdown">
+                <div>
+                  <p class="mat-display-3 m-0 cap-c label-input">
+                    Square Meter Specifications Type
+                  </p>
+                  <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified"
+                    [ngClass]="{ 'dropdown-disabled' : !orderToEdit.options.hasSquareMeterSpecifications }">
+                    <mat-select [(ngModel)]="selectedSquareMeter" panelClass="select-panel-create-order" [disableOptionCentering]="true"
+                      [disabled]="!orderToEdit.options.hasSquareMeterSpecifications">
+                      <mat-option *ngFor="let option of squareMeter; index as i" [value]="option.id">
+                        <p class="mat-display-1 m-0">
+                          {{ option.name }}
+                        </p>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="line-wrapper-dropdown">
+                <div>
+                  <p class="mat-display-3 m-0 cap-c label-input">
+                    Scale Ratio Type
+                  </p>
+                  <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified"
+                    [ngClass]="{ 'dropdown-disabled' : !selectedScaleRatioEnabled }">
+                    <mat-select [(ngModel)]="selectedRatioType" panelClass="select-panel-create-order" [disableOptionCentering]="true"
+                      [disabled]="!selectedScaleRatioEnabled">
+                      <mat-option *ngFor="let option of ratioType; index as i" [value]="option.id">
+                        <p class="mat-display-1 m-0">
+                          {{ option.name }}
+                        </p>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="line-wrapper-dropdown">
+                <div>
+                  <p class="mat-display-3 m-0 cap-c label-input">
+                    Drawing Type
+                  </p>
+                  <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified">
+                    <mat-select [(ngModel)]="selectedDrawingType" panelClass="select-panel-create-order" [disableOptionCentering]="true">
+                      <mat-option *ngFor="let option of drawingType; index as i" [value]="option.id">
+                        <p class="mat-display-1 m-0">
+                          {{ option.name }}
+                        </p>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="wrapper-order-structure-right logo-watermark__container">
+
+            <ng-container *ngIf="addOrderLogo">
+              <div class="logo-wrapper">
+                <h4 class="mat-h4 m-0">
+                  Logo
+                </h4>
+
+                <div class="wrapper-attachment-info">
+
+                  <file-upload [control]="logoUploadControl">
+                    <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+                      <div class="file-upload--container">
+                        <div class="icon-wrap">
+                          <i class="material-icons">upload_file</i>
+                        </div>
+
+                        <div class="upload-text">
+                          <ng-container *ngIf="isFileDragDropAvailable; else isNotDragDropAvailable">
+                            <b>Drag and drop</b> only images<br> or click here
+                          </ng-container>
+                          <ng-template #isNotDragDropAvailable>
+                            <b>Click here</b> to<br> choose a files
+                          </ng-template>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </file-upload>
+
+                </div>
+
+                <div class="inner-wrapper-attachments">
+
+                  <ng-container *ngIf="orderToEdit.options.logo && !logoUploadControl.value.length">
+                    <div class="attachment-item-wrapper">
+                      <span class="attachment-item">
+                        <i class="material-icons icons-card-attachment">attach_file</i>
+                        <p class="mat-display-1 m-0 attachments-item-left">
+                          {{ orderToEdit.options.logo.name }}
+                        </p>
+                        <p class="mat-display-1 m-0 attachments-item-right">
+                          Uploaded {{ orderToEdit.options.logo.dateCreated }}
+                        </p>
+                      </span>
+                      <button class="attachment-item-delete" (click)="deleteLogoAttachment()">
+                        <i class="material-icons icons-card-attachment">close</i>
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <div class="file-list" *ngIf="logoUploadControl.value.length > 0">
+                    <div class="file-item" *ngFor="let file of logoUploadControl.value">
+
+                      <div class="attachment-item-wrapper">
+                        <span class="attachment-item">
+                          <i class="material-icons icons-card-attachment">attach_file</i>
+                          <p class="mat-display-1 m-0 attachments-item-left">
+                            {{ file.name }}
+                          </p>
+                          <p class="mat-display-1 m-0 attachments-item-right">
+                            Last modified {{ file.lastModified | date:'dd.MM.yyyy' }}
+                          </p>
+                        </span>
+                        <button class="attachment-item-delete" (click)="logoUploadControl.removeFile(file)">
+                          <i class="material-icons icons-card-attachment">close</i>
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="addOrderWatermark">
+              <div class="watermark-wrapper">
+                <h4 class="mat-h4 m-0">
+                  Watermark
+                </h4>
+
+                <div class="wrapper-attachment-info">
+
+                  <file-upload [control]="watermarkUploadControl">
+                    <ng-template let-isFileDragDropAvailable="isFileDragDropAvailable" #placeholder>
+                      <div class="file-upload--container">
+                        <div class="icon-wrap">
+                          <i class="material-icons">upload_file</i>
+                        </div>
+
+                        <div class="upload-text">
+                          <ng-container *ngIf="isFileDragDropAvailable; else isNotDragDropAvailable">
+                            <b>Drag and drop</b> only images<br> or click here
+                          </ng-container>
+                          <ng-template #isNotDragDropAvailable>
+                            <b>Click here</b> to<br> choose a files
+                          </ng-template>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </file-upload>
+
+                </div>
+
+                <div class="inner-wrapper-attachments">
+
+                  <ng-container *ngIf="orderToEdit.options.waterMark">
+                    <div class="attachment-item-wrapper">
+                      <span class="attachment-item">
+                        <i class="material-icons icons-card-attachment">attach_file</i>
+                        <p class="mat-display-1 m-0 attachments-item-left">
+                          {{ orderToEdit.options.waterMark.name }}
+                        </p>
+                        <p class="mat-display-1 m-0 attachments-item-right">
+                          Uploaded {{ orderToEdit.options.waterMark.dateCreated }}
+                        </p>
+                      </span>
+                      <button class="attachment-item-delete" (click)="deleteWatermarkAttachment()">
+                        <i class="material-icons icons-card-attachment">close</i>
+                      </button>
+                    </div>
+                  </ng-container>
+
+                  <div class="file-list" *ngIf="watermarkUploadControl.value.length > 0">
+                    <div class="file-item" *ngFor="let file of watermarkUploadControl.value">
+
+                      <div class="attachment-item-wrapper">
+                        <span class="attachment-item">
+                          <i class="material-icons icons-card-attachment">attach_file</i>
+                          <p class="mat-display-1 m-0 attachments-item-left">
+                            {{ file.name }}
+                          </p>
+                          <p class="mat-display-1 m-0 attachments-item-right">
+                            Last modified {{ file.lastModified | date:'dd.MM.yyyy' }}
+                          </p>
+                        </span>
+                        <button class="attachment-item-delete" (click)="watermarkUploadControl.removeFile(file)">
+                          <i class="material-icons icons-card-attachment">close</i>
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+
+        <div class="wrapper-order-structure">
+
+          <div class="control-new-order">
+            <button mat-flat-button class="basic-button basic-red mr-10" (click)="cancelEdit()" disableRipple>Cancel</button>
+            <button mat-flat-button class="basic-button basic-blue" (click)="saveEdit()" disableRipple>Save</button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ng-container>

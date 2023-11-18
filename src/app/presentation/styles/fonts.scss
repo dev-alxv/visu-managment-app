@@ -1,0 +1,30 @@
+@import "~@angular/material/theming";
+
+$scout-typography: mat-typography-config(
+  $font-family: "Roboto",
+  $headline: mat-typography-level(26px, 32px, 500),
+  $title: mat-typography-level(22px, 26px, 500),
+  $subheading-2: mat-typography-level(18px, 22px, 500),
+  $subheading-1: mat-typography-level(16px, 20px, 500),
+  $body-1: mat-typography-level(16px, 20px, 400),
+  $body-2: mat-typography-level(14px, 20px, 500),
+
+
+  $display-1: mat-typography-level(14px, 20px, 400),
+  $display-2: mat-typography-level(12px, 16px, 500),
+  $display-3: mat-typography-level(12px, 16px, 400),
+
+  $caption: mat-typography-level(10px, 12px, 700),
+);
+
+//  **** Explanaition ****
+// Header H1 (class="mat-h1") = $headline
+// Header H2 (class="mat-h2") = $title
+// Header H3 (class="mat-h3") = $subheading-2
+// Body 1 (big medium) (class="mat-h4") = $subheading-1
+// Body 2 (Body big) (class="mat-body-1") = $body-1
+// Body 3 (Body medium) (class="mat-body-2") = $body-2
+// Body 4 (Body) (class="mat-display-1") = $display-1
+// Caption 1 (Caption medium) (class="mat-display-2") = $display-2
+// Caption 2 (Caption) (class="mat-display-3") = $display-3
+// Badge 1 (Badge black) (class="mat-caption") = $caption

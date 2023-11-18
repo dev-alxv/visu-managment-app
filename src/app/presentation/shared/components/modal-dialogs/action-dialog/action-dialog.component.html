@@ -1,0 +1,17 @@
+<div class="wrapper">
+
+  <ng-container *ngIf="onlyInfoModal">
+    <div class="icon-wrap">
+      <i class="material-icons-outlined">check_circle</i>
+    </div>
+  </ng-container>
+
+  <div class="text-wrapper">
+    <ng-container *ngIf="message">
+      <h2 class="mat-h2">
+        {{ message }}
+      </h2>
+    </ng-container>
+  </div>
+
+</div>

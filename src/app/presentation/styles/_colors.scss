@@ -1,0 +1,91 @@
+@import "~@angular/material/theming";
+
+$primary-color: #007DAF;
+$secondary-color: #C5C4C4;
+
+//Cutom-Colors(outside of Material aproach):
+$basic-dark: #333333;
+
+$basic-light-static: #FFFFFF;
+$basic-light-hover: #FAF9F9;
+$basic-light-active: #F3F3F3;
+
+$main-primary-static: #EEEEEE;
+$main-primary-hover: #FAF9F9;
+$main-primary-active: #E3E2E2;
+
+$main-secondary-static: #CFCFCF;
+$main-secondary-hover: #E8E8E8;
+$main-secondary-active: #C5C4C4;
+
+$main-teritary-static: #848484;
+$main-teritary-hover: #989898;
+$main-teritary-active: #555555;
+$main-teritary-disabled: #E3E2E2;
+
+$accent-primary-static: #007DAF;
+$accent-primary-hover: #1D93C1;
+$accent-primary-active: #006C97;
+$accent-primary-disabled: #BFDEEB;
+
+$accent-secondary-static: #09AB53;
+$accent-secondary-hover: #32CA77;
+$accent-secondary-active: #09984A;
+$accent-secondary-disabled: #D3F7DD;
+
+$accent-alert-static: #FE3542;
+$accent-alert-hover: #FF5A69;
+$accent-alert-active: #E31F2B;
+$accent-alert-disabled: #FFDADC;
+
+$accent-warning-static: #F59300;
+$accent-warning-hover: #FFB547;
+$accent-warning-active: #EA8C00;
+$accent-warning-disabled: #FDE2BB;
+
+// SIDECOLORS:
+
+$status-green: #53C36C;
+$status-grey: #3A445D;
+$status-orange: #FF7449;
+$status-yellow: #E3CD00;
+$status-blue: #5243FF;
+$status-pink: #FF43F7;
+$status-purple: #7617A3;
+$status-light-blue: #0AC1DA;
+$status-dark-blue: $accent-primary-active;
+$status-red: $accent-alert-static;
+
+$badge-dark-blue: #5D70B6;
+$badge-red: $accent-alert-hover;
+$badge-orange: $accent-warning-static;
+$badge-light-blue: $accent-primary-hover;
+$badge-green: $accent-secondary-static;
+$badge-grey: $main-teritary-hover;
+
+
+//Colors for Material elements (colors adapted to just have primary/secondary):
+$primary: (
+  A100: #BFDEEB,
+  A200: #1D93C1,
+  A400: #007DAF,
+  A700: #007DAF,
+  contrast: (
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text,
+  ),
+);
+$accent: (
+  A100: #CFCFCF,
+  A200: #E8E8E8,
+  A400: #C5C4C4,
+  A700: #C5C4C4,
+  contrast: (
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $light-primary-text,
+  ),
+);

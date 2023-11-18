@@ -1,0 +1,64 @@
+<div class="wrapper-order-structure">
+  <div class="header-add-floor">
+    <div class="header-add-floor-left">
+      <h4 class="mat-h4 m-0">
+        Floors
+      </h4>
+    </div>
+    <div class="header-add-floor-right">
+      <button class="attachment-item-delete" (click)="addNewFloor()">
+        <p class="mat-display-1 m-0">
+          + Add Floor
+        </p>
+      </button>
+    </div>
+  </div>
+
+  <div class="wrapper-floor-info" *ngFor="let orderFloor of orderFloorList; index as i">
+
+    <div class="wrapper-left-floor-info">
+      <div class="wrapper-floor-element">
+        <span class="number-floor-element">
+          <p class="mat-body-2 m-0">
+            {{ i + 1 }}
+          </p>
+        </span>
+        <div>
+          <p class="mat-display-3 m-0 cap-c label-input">
+            Number
+          </p>
+          <input placeholder="-1" [(ngModel)]="orderFloor.number" type="number" class="basic-input basic-input-floor-element">
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper-right-floor-info">
+      <div class="wrapper-floor-element">
+        <div>
+          <p class="mat-display-3 m-0 cap-c label-input">
+            Name
+          </p>
+          <input placeholder="Basement" [(ngModel)]="orderFloor.name" class="basic-input basic-input-floor-element">
+        </div>
+        <span class="delete-floor-element">
+          <button mat-flat-button class="control-icon-button-small control-icon-red" [disabled]="i === 0" (click)="deleteNewFloor(i)" disableRipple>
+            <i class="material-icons control-icon-buttom-span">delete</i>
+          </button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" class="mt-30">
+    <div fxFlex="50" fxLayout="row">
+      <button mat-flat-button class="basic-button basic-main-secondary" disableRipple (click)="closeModal()">Cancel</button>
+    </div>
+    <div fxFlex="50" fxLayout="row-reverse">
+
+      <div class="ml-20">
+        <button mat-flat-button class="basic-button basic-blue" disableRipple (click)="sentOrderFloors()">Add</button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="header-wrapper" [style.visibility]="!(authenticationStoreStateStream$ | async).authorized ? 'hidden' : 'visible'">
+
+  <div *ngIf="authUserProfile" class="authorized-user-info">
+    <p>
+      Hello,
+      <span class="names">{{ authUserProfile.names.first }} {{ authUserProfile.names.last }}</span>
+      <span class="email"> ({{ authUserProfile.email }})</span>
+    </p>
+  </div>
+
+  <div class="wrapper-language-control ">
+    <button mat-button [matMenuTriggerFor]="accountSettings" disableRipple class="mt-10">
+      <div fxLayout="row">
+        <div class="wrapper-flag ">
+          <span class="flag-icon flag-icon-de flag-preview"></span>
+          <!-- <span  class="flag-icon flag-icon-gb flag-preview"></span> -->
+        </div>
+        <div>
+          <div>
+            <p class="mat-caption m-0 flag-name-small">
+              Sprache
+            </p>
+          </div>
+          <div fxLayout="row">
+            <div>
+              <p class="mat-display-3 m-0 flag-name-big">
+                Deutsch
+              </p>
+              <!-- <span  >English</span> -->
+            </div>
+            <i class="material-icons control-header-icon">expand_more</i>
+          </div>
+        </div>
+      </div>
+    </button>
+    <mat-menu #accountSettings="matMenu">
+      <button mat-menu-item>
+        <span class="flag-icon flag-icon-de"> </span>
+        German
+      </button>
+      <button mat-menu-item>
+        <span class="flag-icon flag-icon-gb"></span>
+        English
+      </button>
+    </mat-menu>
+  </div>
+
+  <button class="settings-button ml-20" (click)="onLogout()">
+    <i class="material-icons icon-settings">exit_to_app</i>
+  </button>
+
+</div>

@@ -1,0 +1,22 @@
+<mat-drawer-container class="wrapper-layout">
+
+  <mat-drawer mode="side" class="side" [opened]="(authenticationStoreStateStream$ | async).authorized">
+
+    <ng-container *ngIf="(authenticationStoreStateStream$ | async).authorized">
+      <ff-side fxLayout="row"></ff-side>
+    </ng-container>
+
+  </mat-drawer>
+
+  <mat-drawer-content class="wrapper-content">
+
+    <ff-header class="header"></ff-header>
+    <ff-main class="main"></ff-main>
+
+  </mat-drawer-content>
+
+</mat-drawer-container>
+
+<ng-container *ngIf="(uiStateStoreStream$ | async) as uiState">
+  <!-- <scout24-container-spinner [loading]="uiState.waitingForAPIIntent" [messageColor]="'primary--color'" [message]="uiState.waitingMessage"></scout24-container-spinner> -->
+</ng-container>

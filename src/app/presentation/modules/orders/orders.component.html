@@ -1,0 +1,489 @@
+<div fxLayout="column" fxFlex="1 1 auto">
+  <div class="orders-filter " fxLayout="row" fxFlex="1 1 auto">
+
+    <div class="filter-service-type">
+      <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified dropdown-first custom-mat-label">
+        <mat-label class="filter-font-color">
+          <i class="material-icons filter-icons">settings</i>
+          <p class="mat-display-1 m-0 ">
+            <span class="ml-10">Service Type</span>
+          </p>
+        </mat-label>
+        <mat-select [(ngModel)]="selectedServiceType" panelClass="select-panel" [disableOptionCentering]="true"
+          (selectionChange)="applyFilters($event.value, 'service')" multiple>
+          <!-- <mat-select-trigger class="filter-font-color">
+            <i class="material-icons filter-icons">settings</i>
+            <p class="mat-display-1 m-0 ">
+              <span class="ml-10">Service Type</span>
+            </p>
+          </mat-select-trigger> -->
+          <mat-option *ngFor="let serviceType of serviceTypes; index as i" [value]="serviceType.type">
+            <div class="badge-wrapper {{serviceType.style}}">
+              <p class="mat-caption m-0 bold status-font">
+                {{ serviceType.name }}
+              </p>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-customer">
+      <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified dropdown-middle custom-mat-label">
+        <mat-label class="filter-font-color">
+          <i class="material-icons filter-icons">assignment_ind</i>
+          <p class="mat-display-1 m-0 ">
+            <span class="ml-10">Customer</span>
+          </p>
+        </mat-label>
+        <mat-select [(ngModel)]="selectedCustomer" panelClass="select-panel" [disableOptionCentering]="true"
+          (selectionChange)="applyFilters($event.value, 'customer')" multiple>
+          <!-- <mat-select-trigger class="filter-font-color">
+            <i class="material-icons filter-icons">assignment_ind</i>
+            <p class="mat-display-1 m-0 ">
+              <span class="ml-10">Customer</span>
+            </p>
+          </mat-select-trigger> -->
+          <mat-option *ngFor="let customer of customers; index as i" [value]="customer.id">
+            <div>
+              <p class="mat-caption m-0  ">
+                {{ customer.name }}
+              </p>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-status">
+      <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified dropdown-middle custom-mat-label">
+        <mat-label class="filter-font-color">
+          <i class="material-icons filter-icons">donut_large</i>
+          <p class="mat-display-1 m-0 ">
+            <span class="ml-10">Status</span>
+          </p>
+        </mat-label>
+        <mat-select [(ngModel)]="selectedStatus" panelClass="select-panel" [disableOptionCentering]="true"
+          (selectionChange)="applyFilters($event.value, 'status')" multiple>
+          <!-- <mat-select-trigger class="filter-font-color">
+            <i class="material-icons filter-icons">donut_large</i>
+            <p class="mat-display-1 m-0 ">
+              <span class="ml-10">Status</span>
+            </p>
+          </mat-select-trigger> -->
+          <mat-option *ngFor="let status of statuses; index as i" [value]="status.name">
+            <div class="status-wrapper {{status.style}}">
+              <p class="mat-caption m-0 bold status-font">
+                {{ status.name }}
+              </p>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-user " fxLayout="row">
+      <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified dropdown-middle custom-mat-label">
+        <mat-label class="filter-font-color">
+          <i class="material-icons filter-icons">account_circle</i>
+          <p class="mat-display-1 m-0 ">
+            <span class="ml-10">Assignee</span>
+          </p>
+        </mat-label>
+        <mat-select [(ngModel)]="selectedUsers" panelClass="select-panel" [disableOptionCentering]="true" (selectionChange)="applyFilters($event.value, 'user')"
+          multiple>
+          <!-- <mat-select-trigger class="filter-font-color">
+            <i class="material-icons filter-icons">account_circle</i>
+            <p class="mat-display-1 m-0 ">
+              <span class="ml-10">User</span>
+            </p>
+          </mat-select-trigger> -->
+          <mat-option *ngFor="let user of users; index as i" [value]="user.id">
+            <div>
+              <p class="mat-caption m-0 ">
+                {{ user.name }}
+              </p>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div>
+        <button class="clear-button" (click)="resetFilters()"
+          [disabled]="!(selectedUsers.length || selectedStatus.length || selectedCustomer.length || selectedServiceType.length)">
+          <i class="material-icons input-icon-left clear-button-icon">backspace</i>
+        </button>
+      </div>
+    </div>
+
+    <div class="wrapper-input-with-icon mb-20">
+      <i class="material-icons input-icon-left">search</i>
+
+      <i *ngIf="searchInputText" class="material-icons input-icon-right search_input__clear" (click)="clearTextFilter()">close</i>
+
+      <input [(ngModel)]="searchInputText" #searchInput placeholder="Filter by Internal ID number..." class="basic-input-icon-left"
+        (keypress)="applyTextFilter($event)">
+    </div>
+  </div>
+
+
+  <div class="orders-filter-control " fxLayout="row">
+
+    <div fxFlex="50" class="orders-filter-control-left" fxLayout="row" fxLayoutAlign="start">
+      <p class="mat-display-1 m-0">
+        Orders:
+      </p>
+      <p class="mat-display-1 m-0 ml-5">
+        {{ paginateConfig.totalItems }}
+      </p>
+    </div>
+    <div fxFlex="50" class="orders-filter-control-right" fxLayout="row" fxLayoutAlign="end">
+      <p class="mat-display-1 f-c-adjusting">
+        Sort by:
+      </p>
+      <mat-form-field appearance="fill" class="ml-5 dropdown-filter-control" floatLabel="never" [formGroup]="myFormGroup">
+
+        <mat-select [disableOptionCentering]="true" formControlName="filterOption" (selectionChange)="applySortFilter($event.value, 'sort_by')">
+          <mat-select-trigger>
+            {{ myFormGroup.controls['filterOption'].value }}
+          </mat-select-trigger>
+
+          <mat-optgroup label="Created Date">
+            <mat-option selected value="Created Date (From new to old)">
+              <p class="mat-display-1 m-0">
+                From new to old
+              </p>
+            </mat-option>
+            <mat-option value="Created Date (From old to new)">
+              <p class="mat-display-1 m-0">
+                From old to new
+              </p>
+            </mat-option>
+          </mat-optgroup>
+
+          <mat-optgroup label="Deadline Date">
+            <mat-option value="Deadline Date (From new to old)">
+              <p class="mat-display-1 m-0">
+                From new to old
+              </p>
+            </mat-option>
+            <mat-option value="Deadline Date (From old to new)">
+              <p class="mat-display-1 m-0">
+                From old to new
+              </p>
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="orders-table-wrapper mb-20">
+    <ng-container *ngIf="!uiState.uiOngoingActions.apiRequest.fetchingOrderListPageSlice; else loading">
+
+      <ng-container *ngIf="orderCollection.length; else noOrders">
+
+        <div class="orders-table-div">
+
+          <table mat-table [dataSource]="orderCollection | paginate: paginateConfig" [trackBy]="ordersTrackFn" matSort class="orders-table">
+
+            <!-- ids, Status Definition -->
+            <ng-container matColumnDef="ids">
+
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <div fxLayout="column">
+                  <div>
+                    <h4 class="mat-h4 m-0 table-th mt-5">
+                      Order
+                    </h4>
+                  </div>
+                  <div>
+                    <p class="mat-display-3 m-0 mb-5 cap-c">
+                      Internal ID, Customer ID, Status
+                    </p>
+                  </div>
+                </div>
+              </th>
+
+              <td mat-cell *matCellDef="let row">
+                <div fxLayout="column">
+                  <div class="table-td">
+                    <p class="mat-display-1 m-0">
+                      {{ row.ids.internal }},
+                    </p>
+                  </div>
+                  <div class="table-td">
+                    <p class="mat-display-1 m-0">
+                      {{ row.userData.customer ? row.userData.customer.id : 'Null' }},
+                    </p>
+                  </div>
+                  <div class="table-td">
+
+                    <div class="badge-wrapper" [ngClass]="{
+                  's-green': row.status === 'NEW',
+                  's-grey': row.status === 'TO_DO',
+                  's-yellow': row.status === 'FP_DRAWING_DONE' || row.status === 'DONE',
+                  's-blue': row.status === 'IN_PROGRESS',
+                  's-pink': row.status === 'FP_FURNISHING_DONE',
+                  's-purple': row.status === 'CUSTOMER_REVIEW',
+                  's-d-blue': row.status === 'ACTION_BASED_ON_FEEDBACK',
+                  's-red': row.status === 'LOST'
+                  }">
+
+                      <p class="mat-caption m-0 bold status-font">
+                        {{ row.status }}
+                      </p>
+                    </div>
+
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Dates Definition -->
+            <ng-container matColumnDef="orderDates">
+
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <div fxLayout="column">
+                  <div>
+                    <h4 class="mat-h4 m-0 table-th">
+                      Dates
+                    </h4>
+                  </div>
+                  <div>
+                    <p class="mat-display-3 m-0 cap-c">
+                      Delivery, Order Date, Deadline
+                    </p>
+                  </div>
+                </div>
+              </th>
+
+              <td mat-cell *matCellDef="let row">
+                <div fxLayout="column">
+                  <div class="table-td">
+                    <p class="mat-display-1 m-0">
+                      {{row.orderDates.delivery}}
+                    </p>
+                  </div>
+                  <div class="table-td">
+                    <p class="mat-display-1 m-0">
+                      {{row.orderDates.enquiry}}
+                    </p>
+                  </div>
+                  <div class="table-td">
+                    <p class="mat-display-1 m-0">
+                      {{row.orderDates.deadline}}
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="assignee">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <h4 class="mat-h4 m-0 table-th">
+                  Asignee
+                </h4>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <div fxLayout="column">
+                  <div class="table-td-assignee" *ngIf="false">
+                    <p class="mat-display-1 m-0 mr-5">
+                      Supervisor:
+                    </p>
+                    <p class="mat-body-2 m-0 table-assignee">
+                      <ng-container *ngIf="row.userData && row.userData.supervisor; else emptyInfo">
+                        {{ row.userData.supervisor.names.first }}
+                      </ng-container>
+                    </p>
+                  </div>
+
+                  <div class="table-td-assignee">
+                    <p class="mat-display-1 m-0 mr-5">
+                      Assignee:
+                    </p>
+                    <p class="mat-body-2 m-0 table-assignee">
+                      <ng-container *ngIf="row.userData && row.userData.assignee; else noAssignee">
+
+                        <ng-container *ngIf="row.userData.assignee.names && row.userData.assignee.names.first !== undefined; else noNamesForAssignee">
+                          {{ row.userData.assignee.names.first }}
+                        </ng-container>
+
+                      </ng-container>
+
+                      <ng-template #noAssignee>
+                        Unassigned
+                      </ng-template>
+                      <ng-template #noNamesForAssignee>
+                        John Doe
+                      </ng-template>
+                    </p>
+                  </div>
+
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="customer">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <h4 class="mat-h4 m-0 table-th">
+                  Customer
+                </h4>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <p class="mat-display-1 m-0">
+                  <!-- Imogent Order Service -->
+                  {{ row.userData.customer ? row.userData.customer.names.first : '-'}}
+                </p>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="data">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <h4 class="mat-h4 m-0 table-th">
+                  Data
+                </h4>
+              </th>
+              <td mat-cell *matCellDef="let row">
+
+                <div fxLayout="column">
+                  <div class="table-td">
+                    <div class="badge-wrapper" [ngClass]="{
+                    'b-red': row.priority === 'Highest priority',
+                    'b-orange' : row.priority === 'High priority',
+                    'b-l-blue' : row.priority === 'Medium priority',
+                    'b-green' : row.priority === 'Low priority',
+                    'b-grey' : row.priority === 'Lowest priority' }">
+
+                      <p class="mat-caption m-0 bold status-font priority-badge">
+                        {{ row.priority }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="table-td-assignee">
+                    <p class="mat-display-1 m-0 mr-5">
+                      Floors:
+                    </p>
+                    <p class="mat-display-1 m-0 ">
+
+                      <ng-container *ngIf="row.floors && row.floors.length; else noFloors">
+                        {{ row.floors.length }}
+                      </ng-container>
+
+                      <ng-template #noFloors>0</ng-template>
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <h4 class="mat-h4 m-0 table-th">
+                  Actions
+                </h4>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <button mat-flat-button class="icon-button basic-main-secondary" *ffCheckPermissions="['Admin', 'Supervisor']"
+                  (click)="assign(row.ids.internal, row.ids.main)" disableRipple>
+                  <i class="material-icons icon-buttom-span">person_add</i>
+                </button>
+                <button mat-flat-button class="icon-button basic-main-secondary ml-5" [routerLink]="'./order/' + row.ids.internal" disableRipple>
+                  <i class="material-icons icon-buttom-span">edit</i>
+                </button>
+                <button mat-flat-button class="icon-button basic-main-secondary ml-5" disabled="disabled" disableRipple>
+                  <i class="material-icons icon-buttom-span">file_copy</i>
+                </button>
+
+                <scout24-container-spinner [loading]="orderToAssignId === row.ids.main && assignUserIntentInProgress" [diameter]="'35'" [strokeWidth]="'7'"
+                  [positionRight]="false" [backgroundColor]="'rgb(255 255 255/ 80%)'"></scout24-container-spinner>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" [attr.data-order-id]="row.ids.main"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <!-- <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr> -->
+          </table>
+
+        </div>
+
+      </ng-container>
+    </ng-container>
+
+    <ng-template #noOrders>
+
+      <div class="no-orders-wrapper">
+        <h3>No orders found</h3>
+      </div>
+
+      <!-- <div style="width: 100%; height: 100%;">
+        <scout24-container-spinner [loading]="true"></scout24-container-spinner>
+      </div> -->
+    </ng-template>
+
+    <ng-template #loading>
+      <ff-order-preloader></ff-order-preloader>
+    </ng-template>
+
+    <ng-container *ngIf="uiState.uiOngoingActions.apiRequest.fetchingOrderListPageSlice && !uiState.uiOngoingActions.apiRequest.updatingSingleOrder.isTrue">
+
+      <!-- <ff-order-preloader></ff-order-preloader> -->
+
+    </ng-container>
+  </div>
+
+  <ng-container *ngIf="!uiState.uiOngoingActions.apiRequest.fetchingOrderListPageSlice && orderCollection.length">
+
+    <div class="orders-pagination">
+      <div class="items-per-page-select">
+        <mat-form-field floatLabel="never" appearance="fill" class="dropdown-modified items-per-page">
+          <mat-select [(value)]="ordersPerPageSelected" panelClass="select-panel-page" (selectionChange)="changeToursPerPage($event.value)"
+            [disableOptionCentering]="true">
+            <mat-option value="10">10</mat-option>
+            <mat-option value="20">20</mat-option>
+            <mat-option value="30">30</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <pagination-controls (pageChange)="onPageChange($event)" (pageBoundsCorrection)="onPageBoundsCorrection($event)" class="list-pagination" id="orderList"
+        [maxSize]="5" previousLabel="" nextLabel="">
+      </pagination-controls>
+
+      <!-- <pagination-template #p="paginationApi" [id]="paginateConfig.id" (pageChange)="fetchPage($event)">
+
+        <div class="custom-pagination">
+          <div class="pagination-previous" [class.disabled]="p.isFirstPage()">
+            <span *ngIf="!p.isFirstPage()" (click)="p.previous()">
+              < </span>
+          </div>
+          <div class="page-number" *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value">
+            <span (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value">{{ page.label }}</span>
+            <div *ngIf="p.getCurrent() === page.value">
+              <span>{{ page.label }}</span>
+            </div>
+          </div>
+          <div class="pagination-next" [class.disabled]="p.isLastPage()">
+            <span *ngIf="!p.isLastPage()" (click)="p.next()"> > </span>
+          </div>
+        </div>
+
+      </pagination-template> -->
+    </div>
+  </ng-container>
+</div>
+
+<!-- <scout24-container-spinner
+  [loading]="uiState.uiOngoingActions.apiRequest.fetchingOrderListPageSlice && !uiState.uiOngoingActions.apiRequest.updatingSingleOrder.isTrue">
+</scout24-container-spinner> -->
+
+<!-- <ng-container *ngIf="uiState.uiOngoingActions.apiRequest.fetchingOrderListPageSlice && !uiState.uiOngoingActions.apiRequest.updatingSingleOrder.isTrue">
+  <ff-order-preloader></ff-order-preloader>
+</ng-container> -->
+
+<ng-template #emptyInfo>
+  -
+</ng-template>

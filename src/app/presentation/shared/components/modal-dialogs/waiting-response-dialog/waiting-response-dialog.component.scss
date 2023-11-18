@@ -1,0 +1,32 @@
+@import "../../../../styles/colors";
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  height: 130px;
+}
+
+.spinner {
+  position: relative;
+  text-align: center;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 30px;
+
+  > i {
+    margin-top: 31px;
+    font-size: 50px;
+    color: $primary-color;
+  }
+}
+
+.text-wrapper {
+  text-align: center;
+}
+
+h2 {
+  margin: 0;
+}

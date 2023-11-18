@@ -1,0 +1,94 @@
+@import "src/app/presentation/styles/_colors";
+
+.side-wrapper {
+  width: 100%;
+  height: 100vh;
+  z-index: 1;
+}
+
+.background-layer-img {
+  background-image: url("../../../../assets/img/backgroundimage.jpg");
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: -1;
+  position: absolute;
+  background-size: cover;
+  background-position: center center;
+}
+
+.background-layer {
+  background-color: $accent-primary-static;
+  opacity: 0.9;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+}
+
+.nav-element-wrapper {
+  margin-top: 74px;
+}
+
+.logo-img {
+  margin-top: 8px;
+  z-index: 1;
+  margin-left: 60px;
+  margin-bottom: 2px;
+  position: absolute;
+}
+
+.devider {
+  right: 15px;
+  width: calc(100% - 30px);
+  margin-top: 52px;
+  height: 1px;
+  content: "";
+  opacity: 0.5;
+  margin-left: 15px;
+  background-color: #ffffff;
+  position: absolute;
+}
+
+.nav-element-last {
+  margin-bottom: 22px;
+  position: absolute;
+  bottom: 0px;
+  margin-left: 15px;
+}
+
+.nav-button-active {
+  border-radius: 4px;
+  color: $basic-light-static;
+  height: 40px;
+  min-width: 175px;
+  text-align: left;
+  &:disabled {
+    color: $basic-light-static;
+  }
+  background-color: $accent-warning-static;
+  &:hover {
+    background-color: $accent-warning-hover;
+  }
+  &:focus {
+    background-color: $accent-warning-active;
+  }
+  &:disabled {
+    background-color: $accent-warning-disabled;
+    color: $accent-warning-hover;
+  }
+}
+
+.nav-button {
+  border-radius: 4px;
+  color: $basic-light-static;
+  height: 40px;
+  min-width: 175px;
+  text-align: left;
+}
+
+.nav-icon {
+  font-size: 22px;
+  margin: 0 15px 0 15px;
+}

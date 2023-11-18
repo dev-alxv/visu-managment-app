@@ -1,0 +1,29 @@
+language: node_js
+node_js:
+  - '14'
+before_install:
+  - 'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"'
+  - 'unzip awscliv2.zip'
+  - 'sudo ./aws/install'
+cache:
+  directories:
+    - ./node_modules
+install:
+  - npm ci
+script: './ci/build.sh;'
+deploy:
+  - provider: script
+    script: bash ci/deploy.sh ACCESS_KEY=$IV_SANDBOX_AWS_ACCESS_KEY_ID ACCESS_SECRET=$IV_SANDBOX_AWS_SECRET_ACCESS_KEY BUCKET="immoviewer-sandbox-sources" HOOK=immoviewer-sandbox-visualization-managment-frontend
+    skip_cleanup: true
+    on:
+      sandbox
+  - provider: script
+    script: bash ci/deploy.sh ACCESS_KEY=$IV_STAGING_AWS_ACCESS_KEY_ID ACCESS_SECRET=$IV_STAGING_AWS_SECRET_ACCESS_KEY BUCKET="immoviewer-staging-sources" HOOK=immoviewer-staging-visualization-managment-frontend
+    skip_cleanup: true
+    on:
+      cloud-staging
+  - provider: script
+    script: bash ci/deploy.sh ACCESS_KEY=$IV_PRODUCTION_AWS_ACCESS_KEY_ID ACCESS_SECRET=$IV_PRODUCTION_AWS_SECRET_ACCESS_KEY BUCKET="immoviewer-production-sources" HOOK=immoviewer-production-visualization-managment-frontend
+    skip_cleanup: true
+    on:
+      cloud-production

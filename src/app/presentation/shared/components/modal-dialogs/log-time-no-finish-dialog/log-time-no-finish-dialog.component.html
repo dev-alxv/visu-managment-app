@@ -1,0 +1,44 @@
+<div fxLayout="column">
+
+  <div>
+    <div>
+      <p class="mat-display-3 m-0 cap-c label-input">
+        Time (min)
+      </p>
+
+      <mat-form-field class="mat-input-custom" [floatLabel]="'never'">
+        <mat-icon matPrefix>watch_later</mat-icon>
+        <input type="number" [(ngModel)]="loggedTime" matInput>
+      </mat-form-field>
+    </div>
+
+    <div class="wrapper-comment-typing">
+      <textarea placeholder="Leave a comment (optional)" id="orderCommentInput" name="orderCommentInput" #commentInput matInput rows="3" style="resize: none;"
+        [(ngModel)]="comment"></textarea>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxFlex="100" fxLayoutAlign="end" class="mt-30">
+    <div>
+      <button mat-flat-button class="basic-button basic-main-secondary" disableRipple (click)="closeModal()">Cancel</button>
+    </div>
+
+    <div class="ml-20">
+      <ng-container *ngIf="!isUserDrafter; else drafterButton">
+        <button mat-flat-button class="basic-button basic-red" disableRipple [disabled]="!loggedTime" (click)="logTimeAndAssign()">Log time & Assign
+          to...</button>
+      </ng-container>
+    </div>
+
+    <div class="ml-20">
+      <button mat-flat-button class="basic-button basic-blue" disableRipple [disabled]="!loggedTime" (click)="onlyLogTime()">Just log time</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #drafterButton>
+  <!-- DRAFTER CASE -->
+    <button mat-flat-button class="basic-button basic-red" disableRipple [disabled]="!loggedTime" (click)="logTimeAndUnassign()">Log time & Unassign from
+      me</button>
+  <!--  -->
+</ng-template>

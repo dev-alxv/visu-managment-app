@@ -1,0 +1,9 @@
+<div class="spinner-load" *ngIf="loading" [ngClass]="{ 'no-bg': transparentBackground, 'top': positionTop, 'right': positionRight }"
+  [ngStyle]="{'background-color': backgroundColor, 'border-radius': borderRadius + 'px'}" @fadeOut [@.disabled]="noAnimation">
+  <div fxLayout="column" fxLayoutAlign="{{ flexPosition }}" style="height: 100%;">
+    <mat-spinner [color]="color" [diameter]="diameter" [strokeWidth]="strokeWidth"></mat-spinner>
+    <ng-container *ngIf="message">
+      <h3 class="{{ messageColor }}">{{ message }}</h3>
+    </ng-container>
+  </div>
+</div>
